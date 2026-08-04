@@ -1,1 +1,58 @@
+# Especificação de Requisitos de Software (ERS)
+**Projeto:** Localize Sua Saúde  
+**Matéria / Turma:** 3º Ano A - Informática (Profº Antonio)  
+**Região Alvo:** Barra do Garças (MT), Pontal do Araguaia (MT) e Aragarças (GO)  
+**Data:** 04 de Agosto de 2026  
+**Versão:** 1.0  
 
+---
+
+## 1. Visão Geral do Sistema
+
+O projeto **Localize Sua Saúde** tem como objetivo resolver a descentralização e a falta de visibilidade digital dos serviços de saúde na região do Vale do Araguaia (Barra do Garças-MT, Pontal do Araguaia-MT e Aragarças-GO). Atualmente, a ausência de cadastros atualizados em plataformas genéricas de mapas faz com que a população perca tempo deslocando-se presencialmente para obter informações básicas sobre atendimento.
+
+A plataforma reunirá hospitais, clínicas e laboratórios de saúde em um único ambiente digital, oferecendo um sistema interativo de busca, localização georreferenciada, consulta de contatos/horários e avaliações comunitárias, com atenção especial à acessibilidade para idosos.
+
+---
+
+## 2. Atores do Sistema
+
+- **Paciente / Cidadão:** Usuário que busca atendimento médico, consulta horários, contatos, localizações e registra avaliações e feedbacks.
+- **Estabelecimento de Saúde (Parceiro):** Responsável por gerenciar o perfil do hospital/clínica/laboratório, atualizar horários, contatos e especialidades oferecidas.
+- **Administrador do Sistema:** Responsável pela moderação de conteúdo, validação do cadastro de estabelecimentos e gestão geral da plataforma.
+
+---
+
+## 3. Requisitos Funcionais (RF)
+
+| ID | Nome do Requisito | Descrição Detalhada | Prioridade |
+| :--- | :--- | :--- | :---: |
+| **RF01** | Busca e Filtragem de Estabelecimentos | Permitir a busca de unidades de saúde por nome, cidade (Barra do Garças, Pontal do Araguaia, Aragarças), especialidade médica, tipo (hospital, clínica, laboratório) e tipo de atendimento (público/SUS ou privado/convênio). | **Alta** |
+| **RF02** | Visualização em Mapa e Geolocalização | Exibir a localização geográfica exata das unidades de saúde em um mapa interativo integrado, permitindo traçar rotas e identificar os estabelecimentos mais próximos. | **Alta** |
+| **RF03** | Perfil Detalhado da Unidade de Saúde | Exibir página dedicada contendo: endereço completo, telefones/WhatsApp, horário de funcionamento, especialidades atendidas, convênios aceitos e fotos do local. | **Alta** |
+| **RF04** | Sistema de Avaliação e Feedbacks | Permitir que usuários cadastrados avaliem os estabelecimentos com notas (1 a 5 estrelas) e registrem comentários detalhados sobre o atendimento recebido. | **Média** |
+| **RF05** | Módulo de Gestão para Parceiros | Disponibilizar painel restrito para que os administradores dos hospitais e clínicas cadastrem e atualizem seus dados institucionais, corpo médico e serviços. | **Média** |
+| **RF06** | Atalho para Contato Direto | Inserir botões de ação rápida para "Ligar Agora" e "Enviar mensagem no WhatsApp" diretamente no perfil da clínica/hospital. | **Alta** |
+| **RF07** | Modo de Alta Acessibilidade (Idosos) | Oferecer alternância de interface com fontes ampliadas, alto contraste, botões simplificados e navegação facilitada voltada para a população idosa. | **Alta** |
+| **RF08** | Moderação de Avaliações | Disponibilizar painel administrativo para filtrar e moderar comentários ofensivos ou indevidos antes da publicação final no site. | **Baixa** |
+
+---
+
+## 4. Requisitos Não Funcionais (RNF)
+
+| ID | Categoria | Descrição Detalhada | Prioridade |
+| :--- | :--- | :--- | :---: |
+| **RNF01** | Usabilidade & Acessibilidade | A interface deve seguir as diretrizes da WCAG 2.1 (nível AA), com contraste mínimo adequado, suporte a leitores de tela e visualização adaptada para a população idosa. | **Alta** |
+| **RNF02** | Responsividade | A plataforma deve ser totalmente responsiva e funcional em smartphones, tablets e computadores de mesa. | **Alta** |
+| **RNF03** | Desempenho | O tempo de carregamento inicial das páginas e consultas de busca não deve exceder 3 segundos sob conexões de internet móvel padrão (3G/4G). | **Média** |
+| **RNF04** | Segurança e Privacidade | O sistema deve estar em conformidade com a LGPD (Lei Geral de Proteção de Dados), garantindo criptografia dos dados de usuários e senhas. | **Alta** |
+| **RNF05** | Disponibilidade | A plataforma deve manter uma disponibilidade (*uptime*) mínima de 99% em regime de execução 24/7. | **Média** |
+| **RNF06** | Escalabilidade | A arquitetura do sistema deve suportar a expansão futura do catálogo para outras cidades e regiões vizinhas sem perda de performance. | **Baixa** |
+
+---
+
+## 5. Regras de Negócio (RN)
+
+- **RN01 - Validação do Cadastro de Estabelecimentos:** Para garantir a veracidade das informações médicas, novos estabelecimentos cadastrados só ficarão visíveis na busca pública após aprovação prévia do Administrador do Sistema.
+- **RN02 - Transparência nas Avaliações:** Usuários só poderão registrar avaliações após realizarem um cadastro simples e login, garantindo a rastreabilidade e evitando *spam* ou *fake reviews*.
+- **RN03 - Gratuidade de Acesso ao Paciente:** A consulta de estabelecimentos, visualização de horários e rotas será sempre 100% gratuita para a população.
