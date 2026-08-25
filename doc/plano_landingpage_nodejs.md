@@ -146,7 +146,7 @@ CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status_atendimento);
 ## 5. Repositório e Controle de Versão (Git / GitHub)
 
 O controle de versão é mantido no repositório GitHub:
-🔗 `https://github.com/carlosdavidr-eng/testereact.git`
+🔗 `https://github.com/danieeee3344/localize-sua-saude.git`
 
 Para atualizar o repositório após edições:
 ```bash
