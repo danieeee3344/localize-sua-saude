@@ -1,14 +1,15 @@
-// Cliente de API centralizado — injeta a chave pública em todas as requisições
+// Cliente de API centralizado
+// Segurança: nenhuma chave é embutida no bundle do navegador.
+// O POST /api/leads é autorizado pela origem da requisição
+// (ORIGENS_CONFIAVEIS no .env do backend).
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
-const CHAVE_PUBLICA = import.meta.env.VITE_API_KEY_PUBLICA
 
 async function requisitar(caminho, opcoes = {}) {
   const resposta = await fetch(`${BASE_URL}${caminho}`, {
     ...opcoes,
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': CHAVE_PUBLICA,
       ...opcoes.headers
     }
   })

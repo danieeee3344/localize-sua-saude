@@ -1,7 +1,6 @@
-require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') })
-
 // Middleware de rate limiting por IP (implementação própria, sem dependências)
 // Limita o número de requisições por janela de tempo
+// Obs: dotenv já é carregado em server.js antes deste módulo
 
 const JANELA_MS = parseInt(process.env.RATE_LIMIT_JANELA_MS) || 900000
 const MAX_REQUISICOES = parseInt(process.env.RATE_LIMIT_MAX_REQUISICOES) || 100

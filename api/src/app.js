@@ -18,16 +18,17 @@ app.use(express.json({ limit: '10kb' }))
 // Rate limiting global para toda a API
 app.use('/api', limitarRequisicoes)
 
-// Servir arquivos estáticos do frontend (React build em dist ou fallback)
+// Servir arquivos estáticos APENAS do build de produção (A3)
+// Nunca cair na pasta raiz do frontend — isso exporia o código-fonte
 const fs = require('fs')
 const caminhoDist = path.resolve(__dirname, '../../frontend/dist')
-const caminhoFrontend = path.resolve(__dirname, '../../frontend')
-const pastaEstatica = fs.existsSync(caminhoDist) ? caminhoDist : caminhoFrontend
+const distExiste = fs.existsSync(caminhoDist)
 
-// Bloqueia acesso direto a arquivos sensíveis
-app.use(express.static(pastaEstatica, {
-  dotfiles: 'ignore'
-}))
+if (distExiste) {
+  app.use(express.static(caminhoDist, { dotfiles: 'ignore' }))
+} else {
+  console.warn('AVISO: frontend/dist não encontrado. Frontend não será servido (execute npm run build).')
+}
 
 // Rotas da API (autenticação por chave dentro das rotas)
 app.use('/api', rotasLeads)
@@ -49,7 +50,10 @@ app.use((erro, req, res, next) => {
 // Fallback para a Landing Page (index.html)
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api')) return next()
-  res.sendFile(path.join(pastaEstatica, 'index.html'), (erro) => {
+  if (!distExiste) {
+    return res.status(503).send('Frontend não compilado. Execute: cd frontend && npm run build')
+  }
+  res.sendFile(path.join(caminhoDist, 'index.html'), (erro) => {
     if (erro) next(erro)
   })
 })
