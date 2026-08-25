@@ -1,48 +1,21 @@
-import React, { useState } from 'react'
+import AccessibilityBar from './components/AccessibilityBar'
 import Header from './components/Header'
 import Hero from './components/Hero'
-import Beneficios from './components/Beneficios'
-import FormularioLead from './components/FormularioLead'
-import Toast from './components/Toast'
+import SearchSection from './components/SearchSection'
+import QuickAccess from './components/QuickAccess'
+import AboutStrip from './components/AboutStrip'
 import Footer from './components/Footer'
 
 export default function App() {
-  const [toastState, setToastState] = useState({
-    mensagem: '',
-    tipo: 'sucesso',
-    visivel: false
-  })
-
-  const exibirToastSucesso = (mensagem) => {
-    setToastState({ mensagem, tipo: 'sucesso', visivel: true })
-  }
-
-  const exibirToastErro = (mensagem) => {
-    setToastState({ mensagem, tipo: 'erro', visivel: true })
-  }
-
-  const fecharToast = () => {
-    setToastState(prev => ({ ...prev, visivel: false }))
-  }
-
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div id="grad1">
+      <AccessibilityBar />
       <Header />
-      <main className="flex-1">
-        <Hero />
-        <Beneficios />
-        <FormularioLead
-          emSucesso={exibirToastSucesso}
-          emErro={exibirToastErro}
-        />
-      </main>
+      <Hero />
+      <SearchSection />
+      <QuickAccess />
+      <AboutStrip />
       <Footer />
-      <Toast
-        mensagem={toastState.mensagem}
-        tipo={toastState.tipo}
-        visivel={toastState.visivel}
-        aoFechar={fecharToast}
-      />
     </div>
   )
 }

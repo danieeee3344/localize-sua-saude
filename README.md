@@ -1,16 +1,49 @@
 # Localize Sua Saúde
 
-Plataforma full stack para localização de unidades de saúde, desenvolvida como projeto acadêmico para a matéria de Projeto e Desenvolvimento de Sistemas.
+Plataforma full stack para localização de unidades de saúde na região do Vale do Araguaia, desenvolvida como projeto acadêmico para a matéria de Projeto e Desenvolvimento de Sistemas.
 
 **Matéria / Turma:** 3º Ano A - Informática (Profº David)  
 **Região Alvo:** Barra do Garças (MT), Pontal do Araguaia (MT) e Aragarças (GO)  
-**Versão:** 1.0  
+**Versão:** 2.0  
 
 ---
 
 ## Visão Geral
 
-O sistema **Localize Sua Saúde** resolve a descentralização e a falta de visibilidade digital dos serviços de saúde na região do Vale do Araguaia. A plataforma reunirá hospitais, clínicas e laboratórios em um único ambiente digital, oferecendo busca interativa, localização georreferenciada e avaliações comunitárias.
+O sistema **Localize Sua Saúde** resolve a descentralização e a falta de visibilidade digital dos serviços de saúde na região do Vale do Araguaia. A plataforma reunirá hospitais, clínicas e laboratórios em um único ambiente digital, oferecendo busca interativa, localização georreferenciada, consulta de medicamentos, agendamento de consultas e avaliações comunitárias — com atenção especial à acessibilidade para idosos.
+
+---
+
+## Funcionalidades Implementadas
+
+### Acessibilidade (RF06 / RNF01)
+- **Modo Idoso:** Amplia fontes e elementos interativos para facilitar o uso por idosos
+- **Alto Contraste:** Alterna esquema de cores para melhorar legibilidade
+- **Controle de Fonte (A+ / A-):** Ajusta o tamanho da fonte em 6 níveis
+- **Persistência:** Preferências salvas no `localStorage` e restauradas automaticamente
+
+### Busca e Filtragem (RF01)
+- **Busca por texto:** Pesquisa por nome, especialidade ou cidade
+- **Busca por CEP:** Integração com ViaCEP API para buscar endereço e redirecionar
+- **Máscara de CEP:** Formatação automática do campo CEP (00000-000)
+- **4 Filtros:** Cidade, Tipo (Hospital/Clínica/Laboratório/UBS), Atendimento (SUS/Particular/Convênio), Especialidade
+
+### Geolocalização (RF02 / US01)
+- **GPS:** Botão "Usar minha localização" captura coordenadas via `navigator.geolocation`
+- **Status:** Feedback visual do estado da geolocalização
+
+### Acesso Rápido (US01–US05)
+- **Ver Hospitais e Clínicas:** Acesso direto à listagem de unidades
+- **Consultar Medicamentos:** Busca de disponibilidade por unidade
+- **Agendar Consulta:** Sistema de agendamento online
+
+### Navegação
+- **Navbar funcional:** Links reais para Início, Unidades de Saúde, Medicamentos, Agendamento
+- **Botão Login:** Acesso ao sistema de autenticação
+
+### Informações da Plataforma
+- **Faixa informativa:** 100% Gratuito, Georreferenciado, Acessível (WCAG 2.1), Funciona no celular
+- **Footer 4 colunas:** Informações da plataforma, Links úteis, Política de Privacidade (LGPD), Termos de Uso
 
 ---
 
@@ -18,11 +51,12 @@ O sistema **Localize Sua Saúde** resolve a descentralização e a falta de visi
 
 | Camada | Tecnologia | Versão |
 |--------|-----------|--------|
-| Frontend | React + Vite + Tailwind CSS | React 18, Vite 5, Tailwind 3 |
+| Frontend | React + Vite + CSS Customizado | React 18, Vite 5 |
 | Backend | Node.js + Express | Express 4 |
 | Banco de Dados | SQLite (better-sqlite3) | better-sqlite3 11 |
 | Segurança | Helmet + CORS + validator | Helmet 8, validator 13 |
-| Estilo | Tailwind CSS via PostCSS + Autoprefixer | - |
+| API Externa | ViaCEP (consulta de CEP) | - |
+| Fonte | Google Fonts (Inter) | - |
 
 ---
 
@@ -51,24 +85,29 @@ localizesaude/
 ├── frontend/                         # Frontend React
 │   ├── package.json                  # Dependências React
 │   ├── vite.config.js                # Configuração Vite + proxy API
-│   ├── tailwind.config.js            # Configuração Tailwind CSS
+│   ├── tailwind.config.js            # Configuração Tailwind CSS + cores do design system
 │   ├── postcss.config.js             # PostCSS (Tailwind + Autoprefixer)
-│   ├── index.html                    # HTML base com div #root
-│   ├── dist/                         # Build de produção (gerado por npm run build)
+│   ├── index.html                    # HTML base com meta description e Google Fonts
+│   ├── public/
+│   │   └── logomarca.png             # Logo do projeto
+│   ├── dist/                         # Build de produção
 │   └── src/
 │       ├── main.jsx                  # Ponto de entrada React (createRoot)
 │       ├── App.jsx                   # Componente raiz orquestrador
-│       ├── index.css                 # Diretivas Tailwind + estilos globais
+│       ├── index.css                 # Design system completo (CSS customizado)
 │       └── components/
-│           ├── Header.jsx            # Navbar fixa com marca do projeto
-│           ├── Hero.jsx              # Seção principal com apresentação
-│           ├── Beneficios.jsx        # Cards de diferenciais da arquitetura
-│           ├── FormularioLead.jsx    # Formulário reativo com máscara e validação
-│           ├── Toast.jsx             # Componente de notificação flutuante
-│           └── Footer.jsx            # Rodapé institucional
+│           ├── AccessibilityBar.jsx  # Barra de acessibilidade (Modo Idoso, Contraste, A+/A-)
+│           ├── Header.jsx            # Navbar azul com links funcionais
+│           ├── Hero.jsx              # Logo + título + subtítulo das cidades
+│           ├── SearchSection.jsx     # Busca por texto, CEP (ViaCEP), GPS e 4 filtros
+│           ├── QuickAccess.jsx       # Botões de acesso rápido (Hospitais, Medicamentos, Agendamento)
+│           ├── AboutStrip.jsx        # Faixa informativa (Gratuito, Georreferenciado, WCAG, Mobile)
+│           └── Footer.jsx            # Rodapé 4 colunas
 │
 ├── doc/                              # Documentação do projeto
 │   ├── plano_landingpage_nodejs.md   # Plano de arquitetura do sistema
+│   ├── plano_correcao.md             # Plano de correção de erros
+│   ├── plano_adequacao_design.md     # Plano de migração do design legado
 │   ├── requisitos-software.md        # Especificação de requisitos de software (SRS)
 │   └── requisitos-usuario.md         # Requisitos de usuário e histórias de uso
 │
@@ -95,15 +134,15 @@ localizesaude/
 
 ### Requisitos Funcionais
 
-| ID | Requisito | Prioridade |
-|----|-----------|------------|
-| RF01 | Busca e Filtragem de Estabelecimentos por nome, cidade, especialidade, tipo e atendimento | Alta |
-| RF02 | Visualização em Mapa e Geolocalização com Leaflet.js | Alta |
-| RF03 | Perfil Detalhado da Unidade de Saúde (endereço, telefone, horários, especialidades) | Alta |
-| RF04 | Sistema de Avaliação e Feedbacks (1-5 estrelas) | Média |
-| RF05 | Atalho para Contato Direto (Ligar Agora, WhatsApp) | Alta |
-| RF06 | Modo de Alta Acessibilidade para Idosos | Alta |
-| RF07 | Moderação de Avaliações (painel administrativo) | Baixa |
+| ID | Requisito | Status |
+|----|-----------|--------|
+| RF01 | Busca e Filtragem de Estabelecimentos por nome, cidade, especialidade, tipo e atendimento | Implementado |
+| RF02 | Visualização em Mapa e Geolocalização | Implementado (GPS via navigator.geolocation) |
+| RF03 | Perfil Detalhado da Unidade de Saúde | Em desenvolvimento |
+| RF04 | Sistema de Avaliação e Feedbacks (1-5 estrelas) | Em desenvolvimento |
+| RF05 | Atalho para Contato Direto (Ligar Agora, WhatsApp) | Em desenvolvimento |
+| RF06 | Modo de Alta Acessibilidade para Idosos | Implementado |
+| RF07 | Moderação de Avaliações (painel administrativo) | Em desenvolvimento |
 
 ### Requisitos Não Funcionais
 
@@ -122,6 +161,16 @@ localizesaude/
 - **RN02:** Avaliações requerem cadastro e login prévio
 - **RN03:** Consulta de estabelecimentos é 100% gratuita para pacientes
 
+### Histórias de Usuário
+
+| Código | Descrição | Status |
+|--------|-----------|--------|
+| US01 | Localizar unidades de saúde (busca, GPS, CEP) | Implementado |
+| US02 | Filtrar unidades por serviços | Implementado |
+| US03 | Consultar medicamentos | Em desenvolvimento |
+| US04 | Atualizar estoque (Atendente) | Em desenvolvimento |
+| US05 | Agendar consultas | Em desenvolvimento |
+
 ---
 
 ## Instalação e Configuração
@@ -134,8 +183,8 @@ localizesaude/
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/carlosdavidr-eng/testereact.git
-cd localizesaude
+git clone https://github.com/danieeee3344/localize-sua-saude.git
+cd localize-sua-saude
 ```
 
 ### 2. Instalar dependências
@@ -289,6 +338,34 @@ O banco é criado automaticamente ao iniciar o servidor.
 
 ---
 
+## Design System
+
+O projeto utiliza um design system customizado inspirado no protótipo legado:
+
+### Cores
+
+| Variável | Hex | Uso |
+|----------|-----|-----|
+| `--clr-primary` | `#0051bb` | Cor principal (azul) |
+| `--clr-primary-dk` | `#003a8a` | Azul escuro (hover) |
+| `--clr-accent` | `#00bb38` | Cor de destaque (verde) |
+| `--clr-accent-dk` | `#007d24` | Verde escuro (hover) |
+| `--clr-purple` | `#7d8aff` | Roxo (mapas) |
+| `--clr-bg` | `#f0f4ff` | Fundo da aplicação |
+| `--clr-text` | `#1a1d2c` | Texto principal |
+| `--clr-muted` | `#4a5568` | Texto secundário |
+| `--clr-border` | `#d1d9e6` | Bordas |
+
+### Componentes Visuais
+
+- **Barra de Acessibilidade:** Fundo `#1a1d2c`, fixa no topo, z-index 2000
+- **Navbar:** Fundo `#0051bb`, fixa abaixo da barra de acessibilidade
+- **Cards:** Border-radius 12px, sombras azuis sutis
+- **Botões:** Border-radius 12px, transições suaves
+- **Chips:** Border-radius 999px (pill shape)
+
+---
+
 ## Segurança
 
 - **Helmet:** Proteção de cabeçalhos HTTP (CSP desabilitado para desenvolvimento)
@@ -313,16 +390,24 @@ Os protótipos anteriores estão preservados na pasta `legado/` para referência
 
 ## Funcionalidades do Protótipo Legado
 
-O protótipo em `legado/localizesuasaude/` continha:
+O protótipo em `legado/localizesuasaude/` continha (e que foram migradas para o React):
 
+- **Barra de acessibilidade** com Modo Idoso, Alto Contraste e controle de fonte
+- **Navbar funcional** com links reais de navegação
 - **Busca de unidades de saúde** com filtros por cidade, tipo e especialidade
-- **Mapa interativo** com Leaflet.js e OpenStreetMap
-- **Cadastro de estabelecimentos** com moderação administrativa
-- **Consulta de medicamentos** por unidade de saúde
-- **Agendamento de consultas** com seleção de horários
-- **Sistema de login/cadastro** com perfis (Cidadão, Atendente, Gestor)
-- **Modo acessibilidade** com alto contraste e fontes ampliadas
-- **Avaliações e reviews** com sistema de estrelas
+- **Busca por CEP** com integração ViaCEP API
+- **Geolocalização** via navigator.geolocation
+- **Botões de acesso rápido** para Hospitais, Medicamentos e Agendamento
+- **Faixa informativa** sobre a plataforma
+- **Footer 4 colunas** com links institucionais
+
+Funcionalidades ainda não migradas para React:
+- Mapa interativo com Leaflet.js e OpenStreetMap
+- Página de listagem de hospitais com cards detalhados
+- Consulta de medicamentos por unidade
+- Agendamento de consultas com seleção de horários
+- Sistema de login/cadastro com perfis (Cidadão, Atendente, Gestor)
+- Avaliações e reviews com sistema de estrelas
 
 ---
 
@@ -333,7 +418,7 @@ O protótipo em `legado/localizesuasaude/` continha:
 - 100% do código, variáveis, funções e comentários em **português brasileiro**
 - Arquitetura em camadas: Rotas → Controladores → Configuração → Utilitários
 - Componentes React funcionais com hooks (useState, useEffect)
-- Design system utilitário com Tailwind CSS
+- Design system customizado com CSS variables
 
 ### Scripts Disponíveis
 
@@ -349,7 +434,7 @@ O protótipo em `legado/localizesuasaude/` continha:
 
 ## Contato e Repositório
 
-- **Repositório:** [github.com/carlosdavidr-eng/testereact](https://github.com/carlosdavidr-eng/testereact)
+- **Repositório:** [github.com/danieeee3344/localize-sua-saude](https://github.com/danieeee3344/localize-sua-saude)
 - **Região atendida:** Barra do Garças (MT), Pontal do Araguaia (MT), Aragarças (GO)
 
 ---
