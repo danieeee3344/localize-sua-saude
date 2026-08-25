@@ -111,10 +111,6 @@ localizesaude/
 │   ├── requisitos-software.md        # Especificação de requisitos de software (SRS)
 │   └── requisitos-usuario.md         # Requisitos de usuário e histórias de uso
 │
-├── legado/                           # Protótipos anteriores (referência)
-│   ├── localize-sua-saude/           # Repositório de requisitos (fase 1)
-│   └── localizesuasaude/             # Protótipo HTML/CSS/JS estático (fase 2)
-│
 ├── package.json                      # Scripts de conveniência (raiz)
 ├── .gitignore                        # Arquivos ignorados pelo Git
 └── README.md                         # Este arquivo
@@ -384,30 +380,7 @@ O projeto utiliza um design system customizado inspirado no protótipo legado:
 | **Fase 2** | Protótipo funcional | HTML/CSS/JS estático + sql.js (WASM) |
 | **Fase 3** | Sistema full stack atual | React 18 + Node.js + Express + SQLite |
 
-Os protótipos anteriores estão preservados na pasta `legado/` para referência.
-
----
-
-## Funcionalidades do Protótipo Legado
-
-O protótipo em `legado/localizesuasaude/` continha (e que foram migradas para o React):
-
-- **Barra de acessibilidade** com Modo Idoso, Alto Contraste e controle de fonte
-- **Navbar funcional** com links reais de navegação
-- **Busca de unidades de saúde** com filtros por cidade, tipo e especialidade
-- **Busca por CEP** com integração ViaCEP API
-- **Geolocalização** via navigator.geolocation
-- **Botões de acesso rápido** para Hospitais, Medicamentos e Agendamento
-- **Faixa informativa** sobre a plataforma
-- **Footer 4 colunas** com links institucionais
-
-Funcionalidades ainda não migradas para React:
-- Mapa interativo com Leaflet.js e OpenStreetMap
-- Página de listagem de hospitais com cards detalhados
-- Consulta de medicamentos por unidade
-- Agendamento de consultas com seleção de horários
-- Sistema de login/cadastro com perfis (Cidadão, Atendente, Gestor)
-- Avaliações e reviews com sistema de estrelas
+Os protótipos anteriores foram removidos após a migração completa das funcionalidades para o React.
 
 ---
 
