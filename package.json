@@ -1,0 +1,17 @@
+{
+  "name": "localize-sua-saude",
+  "version": "1.0.0",
+  "description": "Localize Sua Saúde - Plataforma de localização de unidades de saúde",
+  "private": true,
+  "scripts": {
+    "install:all": "cd api && npm install && cd ../frontend && npm install",
+    "dev:api": "cd api && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:frontend\"",
+    "build": "cd frontend && npm run build",
+    "start": "cd api && npm start",
+    "setup": "npm run install:all && npm run build"
+  },
+  "keywords": ["saude", "nodejs", "react", "sqlite", "localizacao"],
+  "license": "MIT"
+}

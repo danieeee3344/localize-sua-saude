@@ -1,0 +1,19 @@
+{
+  "name": "api-localize-sua-saude",
+  "version": "1.0.0",
+  "description": "API para o sistema Localize Sua Saúde - captura de contatos e gestão de leads",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.10.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "sql.js": "^1.14.1",
+    "validator": "^13.12.0"
+  }
+}
