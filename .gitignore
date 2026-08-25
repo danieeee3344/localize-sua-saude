@@ -1,10 +1,25 @@
+# Dependências
 node_modules/
+
+# Builds
 dist/
+
+# Variáveis de ambiente (SEGREDOS - NUNCA COMMITAR)
 .env
+.env.local
+.env.*.local
+
+# Banco de dados
 *.db
 *.db-shm
 *.db-wal
+
+# Logs
 server.log
 server.err
+*.log
+
+# Sistema / Editor
 .DS_Store
 .vscode/
+.idea/
