@@ -1,6 +1,8 @@
 # Especificação de Requisitos de Software 
 Projeto: Localize Sua Saúde  
-Matéria / Turma: 3º Ano A - Informática (Profº David)  
+Matéria: Projeto e Desenvolvimento de Sistemas — 3º Ano A, Informática  
+Professor: Carlos David  
+Equipe: Hemily Gouveia, Daniel Reges, Beatriz Telles e Marcela Oliveira  
 Região Alvo: Barra do Garças (MT), Pontal do Araguaia (MT) e Aragarças (GO)  
 Data: 04 de Agosto de 2026  
 Versão: 1.0  

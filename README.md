@@ -2,7 +2,15 @@
 
 Plataforma full stack para localização de unidades de saúde na região do Vale do Araguaia, desenvolvida como projeto acadêmico para a matéria de Projeto e Desenvolvimento de Sistemas.
 
-**Matéria / Turma:** 3º Ano A - Informática (Profº David)  
+**Matéria:** Projeto e Desenvolvimento de Sistemas — 3º Ano A, Informática  
+**Professor:** Carlos David  
+
+**Equipe:**
+- Hemily Gouveia
+- Daniel Reges
+- Beatriz Telles
+- Marcela Oliveira
+
 **Região Alvo:** Barra do Garças (MT), Pontal do Araguaia (MT) e Aragarças (GO)  
 **Versão:** 2.0  
 

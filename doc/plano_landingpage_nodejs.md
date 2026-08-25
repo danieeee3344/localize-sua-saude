@@ -47,7 +47,7 @@ testereact/
 │       ├── App.jsx               # Componente raiz unificador da interface
 │       ├── index.css             # Estilos globais e importações do Tailwind CSS
 │       └── components/
-│           ├── Header.jsx        # Navbar fixa com marca AcademiStack
+│           ├── Header.jsx        # Navbar fixa com marca Localize Sua Saúde
 │           ├── Hero.jsx          # Seção Hero com destaque para a stack
 │           ├── Beneficios.jsx    # Cards da arquitetura (React, Node, SQLite)
 │           ├── FormularioLead.jsx# Formulário reativo com máscara e validação
