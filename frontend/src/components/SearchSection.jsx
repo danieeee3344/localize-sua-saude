@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function SearchSection() {
   const [cep, setCep] = useState('')
   const [status, setStatus] = useState('')
+  const navigate = useNavigate()
 
   const handleCepMask = (e) => {
     let v = e.target.value.replace(/\D/g, '')
@@ -46,6 +48,17 @@ export default function SearchSection() {
 
   const handleSearch = (e) => {
     e.preventDefault()
+    // Valores trafegam como URLSearchParams (codificados); a página de
+    // destino revalida cada parâmetro antes de usar.
+    const dados = new FormData(e.currentTarget)
+    const params = new URLSearchParams()
+    const q = String(dados.get('q') || '').trim().slice(0, 80)
+    if (q) params.set('q', q)
+    for (const chave of ['cidade', 'tipo', 'atendimento', 'especialidade']) {
+      const valor = String(dados.get(chave) || '')
+      if (valor) params.set(chave, valor)
+    }
+    navigate(`/hospitais?${params.toString()}`)
   }
 
   return (

@@ -340,3 +340,691 @@ body.high-contrast .footer { background: #111 !important; }
   #accessibility-bar button { padding: 2px 8px; }
   #intro h1 { font-size: 1.4rem; }
 }
+
+/* ══════════════════════════════════════════════════════════ */
+/* ── Páginas internas (portadas do template) ──────────────── */
+/* ══════════════════════════════════════════════════════════ */
+
+/* ── Usuário logado na navbar ─────────────────────────────── */
+#navbar .nav-usuario {
+  margin-left: auto;
+  color: rgba(255,255,255,.9);
+  padding: 16px 10px;
+  font-size: .85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+#navbar .btn-logout {
+  background: #fff;
+  color: var(--clr-danger);
+  border: none;
+  margin: 8px 8px 8px 0;
+  padding: 8px 18px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-family: var(--font-base);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+#navbar .btn-logout:hover { background: #ffe8e8; }
+
+/* ── Container das páginas de unidades ────────────────────── */
+.main-container {
+  max-width: 1100px;
+  margin: 110px auto 40px;
+  padding: 32px 24px;
+}
+.main-container h1 {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: var(--clr-text);
+  margin: 16px 0 24px;
+  text-align: center;
+}
+.main-container > img { margin: 0 auto; width: 180px; height: auto; }
+
+/* ── Mapa (RF02) ──────────────────────────────────────────── */
+#map {
+  width: 100%;
+  height: 340px;
+  border-radius: 14px;
+  border: 2px solid var(--clr-border);
+  margin: 16px 0 6px;
+  box-shadow: var(--shadow-md);
+  z-index: 0;
+}
+.map-hint { text-align: center; font-size: .82rem; color: var(--clr-muted); margin-bottom: 20px; }
+.lss-pin { background: none; border: none; }
+
+/* ── Filtros inline (RF01) ────────────────────────────────── */
+.filter-form { margin-bottom: 8px; }
+.filter-inline {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: var(--clr-white);
+  border: 2px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.filter-inline input,
+.filter-inline select {
+  flex: 1;
+  min-width: 140px;
+  padding: 10px 14px;
+  border: 2px solid var(--clr-border);
+  border-radius: 8px;
+  font-size: .9rem;
+  font-family: var(--font-base);
+  background: #f8faff;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.filter-inline input:focus,
+.filter-inline select:focus { border-color: var(--clr-primary); }
+.btn-filter {
+  background: var(--clr-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: .95rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-base);
+  transition: background var(--transition), transform .15s;
+  white-space: nowrap;
+}
+.btn-filter:hover { background: var(--clr-primary-dk); transform: translateY(-1px); }
+
+/* ── Cabeçalho de resultados ──────────────────────────────── */
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+#results-count { font-weight: 600; color: var(--clr-text); font-size: .95rem; }
+.sort-group { display: flex; align-items: center; gap: 8px; font-size: .875rem; color: var(--clr-muted); }
+.sort-group select {
+  padding: 6px 12px;
+  border: 2px solid var(--clr-border);
+  border-radius: 6px;
+  font-size: .875rem;
+  font-family: var(--font-base);
+  outline: none;
+  cursor: pointer;
+}
+.btn-add-unit {
+  background: var(--clr-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: .9rem;
+  font-weight: 700;
+  font-family: var(--font-base);
+  cursor: pointer;
+  transition: background var(--transition), transform .15s;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+.btn-add-unit:hover { background: var(--clr-primary-dk); transform: translateY(-1px); }
+
+/* ── Grid e cards das unidades (RF03–RF05) ────────────────── */
+.hospitals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 8px;
+}
+.hospital-card {
+  background: var(--clr-white);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,81,187,.09);
+  overflow: hidden;
+  transition: box-shadow .25s, transform .2s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.hospital-card:hover {
+  box-shadow: 0 12px 36px rgba(0,81,187,.16);
+  transform: translateY(-4px);
+}
+.card-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: .75rem;
+  font-weight: 700;
+  z-index: 1;
+}
+.card-badge--public  { background: #c6f6d5; color: #276749; }
+.card-badge--private { background: #ebf8ff; color: #2c5282; }
+.hospital-card > a > img,
+.hospital-card > a img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  transition: transform .4s ease;
+}
+.hospital-card:hover > a > img,
+.hospital-card:hover a img { transform: scale(1.04); }
+.card-body { padding: 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.card-title { font-size: 1.15rem; font-weight: 700; color: var(--clr-text); margin: 0; }
+.card-type { font-size: .82rem; color: var(--clr-muted); margin: 0; }
+.card-rating { display: flex; align-items: center; gap: 6px; }
+.stars { color: #f6c844; font-size: 1rem; letter-spacing: 1px; }
+.rating-value { font-weight: 700; font-size: .95rem; color: var(--clr-text); }
+.rating-count { font-size: .78rem; color: var(--clr-muted); }
+.card-info {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: .82rem;
+  color: var(--clr-muted);
+  line-height: 1.7;
+}
+.card-info li { border-bottom: 1px solid var(--clr-bg); padding: 3px 0; }
+.card-info li:last-child { border-bottom: none; }
+
+/* ── Botões de ação dos cards (RF05) ──────────────────────── */
+.card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border-radius: 8px;
+  font-size: .8rem;
+  font-weight: 600;
+  font-family: var(--font-base);
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: background var(--transition), transform .15s;
+  flex: 1;
+  white-space: nowrap;
+}
+.btn-action:hover { transform: translateY(-1px); text-decoration: none; }
+.btn-call      { background: var(--clr-primary); color: #fff; }
+.btn-call:hover { background: var(--clr-primary-dk); color: #fff; }
+.btn-whatsapp  { background: #25D366; color: #fff; }
+.btn-whatsapp:hover { background: #1da84e; color: #fff; }
+.btn-map       { background: var(--clr-purple); color: #fff; display: inline-block; }
+.btn-map:hover { background: #5c6aff; color: #fff; }
+
+/* ── Avaliação (RF04) ─────────────────────────────────────── */
+.rating-section { border-top: 1px solid var(--clr-bg); padding-top: 10px; }
+.rating-section summary {
+  font-size: .875rem;
+  font-weight: 600;
+  color: var(--clr-primary);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.rating-section summary::-webkit-details-marker { display: none; }
+.rating-section summary::before { content: '▸ '; }
+.rating-section[open] summary::before { content: '▾ '; }
+.rating-form { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.rating-note { font-size: .8rem; color: var(--clr-muted); }
+.star-picker { display: flex; gap: 6px; }
+.star-picker button {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--clr-border);
+  cursor: pointer;
+  transition: color .15s, transform .1s;
+  padding: 0;
+  line-height: 1;
+}
+.star-picker button:hover,
+.star-picker button.selected { color: #f6c844; transform: scale(1.2); }
+.rating-form textarea {
+  padding: 10px 12px;
+  border: 2px solid var(--clr-border);
+  border-radius: 8px;
+  font-family: var(--font-base);
+  font-size: .875rem;
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.rating-form textarea:focus { border-color: var(--clr-primary); }
+.btn-submit-rating {
+  background: var(--clr-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: .875rem;
+  font-weight: 700;
+  font-family: var(--font-base);
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background var(--transition);
+}
+.btn-submit-rating:hover { background: var(--clr-primary-dk); }
+
+/* ── Sem resultados ───────────────────────────────────────── */
+.no-results { text-align: center; padding: 48px 20px; color: var(--clr-muted); }
+.no-results p { font-size: 1.1rem; margin-bottom: 16px; }
+.btn-reset {
+  background: transparent;
+  border: 2px solid var(--clr-primary);
+  color: var(--clr-primary);
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-base);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+.btn-reset:hover { background: var(--clr-primary); color: #fff; }
+
+/* ── Modal de cadastro de unidade ─────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .55);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  backdrop-filter: blur(3px);
+}
+.modal-box {
+  background: var(--clr-white);
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0,0,0,.25);
+  width: 100%;
+  max-width: 680px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 32px;
+  animation: modalIn .2s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(-20px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.modal-header h2 { font-size: 1.2rem; color: var(--clr-text); margin: 0; }
+.modal-close {
+  background: var(--clr-bg);
+  border: none;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--clr-muted);
+  transition: background var(--transition), color var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-close:hover { background: var(--clr-danger); color: #fff; }
+.modal-note {
+  font-size: .82rem;
+  color: var(--clr-muted);
+  background: #fff8e1;
+  border: 1px solid #f6c844;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+}
+.modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+.btn-cancel-modal {
+  background: transparent;
+  border: 2px solid var(--clr-border);
+  color: var(--clr-muted);
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: .95rem;
+  font-weight: 600;
+  font-family: var(--font-base);
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition);
+}
+.btn-cancel-modal:hover { border-color: var(--clr-muted); color: var(--clr-text); }
+.btn-submit-unit {
+  background: var(--clr-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: .95rem;
+  font-weight: 700;
+  font-family: var(--font-base);
+  cursor: pointer;
+  transition: background var(--transition), transform .15s;
+}
+.btn-submit-unit:hover { background: var(--clr-primary-dk); transform: translateY(-1px); }
+
+/* ── Grupos de formulário reutilizáveis ───────────────────── */
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: .875rem; font-weight: 600; color: var(--clr-muted); text-align: left; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 12px 14px;
+  border: 2px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-family: var(--font-base);
+  background: var(--clr-white);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(0,81,187,.12);
+}
+.form-group--full { grid-column: 1 / -1; }
+.form-error {
+  background: #fff5f5;
+  border: 1px solid #fed7d7;
+  color: var(--clr-danger);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: .875rem;
+  margin-bottom: 14px;
+}
+.form-msg {
+  font-size: .85rem;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+.form-msg--erro { background: #fff5f5; border: 1px solid #fed7d7; color: #c53030; }
+.form-msg--sucesso { background: #f0fff4; border: 1px solid #9ae6b4; color: #276749; }
+
+/* ── Medicamentos (US03) ──────────────────────────────────── */
+.meds-search-section { max-width: 700px; margin: 0 auto 28px; padding: 0 16px; }
+.meds-search-box { display: flex; gap: 8px; margin-bottom: 12px; }
+.meds-search-box input {
+  flex: 1;
+  padding: 14px 18px;
+  border: 2px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-family: var(--font-base);
+  background: var(--clr-white);
+  outline: none;
+  transition: border-color var(--transition);
+}
+.meds-search-box input:focus { border-color: var(--clr-primary); }
+.med-suggestions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: .85rem;
+  color: var(--clr-muted);
+}
+.chip {
+  background: var(--clr-white);
+  border: 1px solid var(--clr-border);
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: .85rem;
+  cursor: pointer;
+  font-family: var(--font-base);
+  transition: background var(--transition), border-color var(--transition);
+}
+.chip:hover { background: var(--clr-primary); color: #fff; border-color: var(--clr-primary); }
+.med-results { max-width: 900px; margin: 0 auto; padding: 0 16px 40px; }
+.med-results-placeholder { text-align: center; color: var(--clr-muted); padding: 60px 20px; }
+.med-results-placeholder span { font-size: 3rem; display: block; margin-bottom: 12px; }
+.med-result-title { font-size: 1.2rem; margin-bottom: 16px; color: var(--clr-text); }
+.med-result-title em { color: var(--clr-primary); }
+.med-cards { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.med-card {
+  flex: 1;
+  min-width: 200px;
+  background: var(--clr-white);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--clr-border);
+  transition: box-shadow var(--transition);
+}
+.med-card:hover { box-shadow: var(--shadow-md); }
+.med-card--available { border-left-color: var(--clr-success); }
+.med-card--unavailable { border-left-color: var(--clr-danger); }
+.med-card__status { font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
+.med-card--available .med-card__status { color: var(--clr-success); }
+.med-card--unavailable .med-card__status { color: var(--clr-danger); }
+.med-card__unit { font-size: 1rem; margin-bottom: 8px; }
+.med-card__badge { font-size: .8rem; margin-bottom: 8px; }
+.badge--sus { color: var(--clr-accent-dk); }
+.badge--private { color: var(--clr-primary); }
+.med-card__updated { font-size: .8rem; color: var(--clr-muted); margin-bottom: 12px; }
+.med-not-found { text-align: center; color: var(--clr-muted); padding: 40px 0; }
+.med-disclaimer { font-size: .82rem; color: var(--clr-muted); font-style: italic; margin-top: 8px; }
+
+/* ── Agendamento (US05) ───────────────────────────────────── */
+.login-notice {
+  max-width: 800px;
+  margin: 0 auto 20px;
+  padding: 14px 20px;
+  background: #fff8e1;
+  border: 1px solid #f6c844;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: .95rem;
+}
+.sched-section { max-width: 800px; margin: 0 auto 32px; padding: 0 16px; }
+.sched-form {
+  background: var(--clr-white);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-md);
+}
+.sched-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.slots-section { margin-bottom: 24px; }
+.slots-section h2 { font-size: 1rem; color: var(--clr-muted); margin-bottom: 12px; }
+.slots-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+.slots-placeholder { font-size: .9rem; color: var(--clr-muted); }
+.slot-btn {
+  background: var(--clr-bg);
+  border: 2px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: .95rem;
+  font-weight: 600;
+  font-family: var(--font-base);
+  cursor: pointer;
+  transition: all var(--transition);
+  color: var(--clr-text);
+}
+.slot-btn:hover   { border-color: var(--clr-primary); background: #e8f0ff; }
+.slot-btn.selected { background: var(--clr-primary); color: #fff; border-color: var(--clr-primary); }
+.btn-bloco--full-width { width: 100%; max-width: 100%; }
+.my-schedules { max-width: 800px; margin: 0 auto 40px; padding: 0 16px; }
+.my-schedules h2 { font-size: 1.2rem; margin-bottom: 16px; }
+.schedules-empty { color: var(--clr-muted); font-size: .95rem; }
+.appt-card {
+  background: var(--clr-white);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.appt-info { display: flex; flex-direction: column; gap: 4px; font-size: .9rem; }
+.appt-info strong { font-size: 1rem; }
+.btn-cancel {
+  background: var(--clr-danger);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-size: .875rem;
+  font-weight: 600;
+  font-family: var(--font-base);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.btn-cancel:hover { background: #c53030; }
+.no-cancel { font-size: .8rem; color: var(--clr-muted); }
+
+/* ── Login / Cadastro (style3.css) ────────────────────────── */
+.login-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 120px;
+  padding-bottom: 32px;
+}
+.login-container {
+  background-color: var(--clr-white);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: var(--shadow-md);
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  text-align: center;
+  box-sizing: border-box;
+}
+.input-group { margin-bottom: 15px; text-align: left; }
+.input-group.password-group { margin-bottom: 25px; }
+.input-group label { color: #1a2a6c; font-size: 14px; font-weight: bold; display: block; }
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #1a2a6c;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-family: var(--font-base);
+  font-size: .95rem;
+}
+.select-full {
+  width: 100%;
+  padding: 10px 14px;
+  margin-top: 5px;
+  border: 1px solid #1a2a6c;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-family: var(--font-base);
+  font-size: .95rem;
+  color: #1a2a6c;
+  background: var(--clr-white);
+  cursor: pointer;
+}
+.btn-show-pass {
+  margin-top: 6px;
+  font-size: .8rem;
+  background: none;
+  border: none;
+  color: var(--clr-primary);
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--font-base);
+}
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background-color: #1a2a6c;
+  color: var(--clr-white);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-family: var(--font-base);
+  font-size: 1rem;
+  transition: background-color .2s ease;
+}
+.btn-submit:hover { background-color: #111b47; }
+.btn-submit:disabled { opacity: .6; cursor: not-allowed; }
+.signup-link {
+  display: inline-block;
+  margin-top: 15px;
+  color: navy;
+  text-decoration: none;
+  font-weight: bold;
+}
+.signup-link:hover { text-decoration: underline; }
+.terms-group { margin: 12px 0; font-size: .85rem; text-align: left; }
+.footer-link { margin-top: 16px; }
+
+/* ── Modos de acessibilidade nas novas páginas (RF06/RNF01) ─ */
+body.elderly-mode .card-title { font-size: 1.35rem; }
+body.elderly-mode .card-info  { font-size: 1rem; }
+body.elderly-mode .filter-inline { flex-direction: column; }
+body.elderly-mode .login-container { padding: 48px; }
+body.elderly-mode .input-group label { font-size: 1.1rem; }
+body.elderly-mode .input-group input { font-size: 1.15rem; padding: 14px; }
+body.elderly-mode .btn-submit { font-size: 1.1rem; padding: 16px; }
+body.high-contrast .hospital-card { background: #111 !important; border: 2px solid #fff; }
+body.high-contrast .filter-inline { background: #111 !important; border-color: #fff; }
+body.high-contrast .filter-inline input,
+body.high-contrast .filter-inline select { background: #222 !important; color: #fff !important; border-color: #fff; }
+body.high-contrast #map { filter: invert(1) hue-rotate(180deg); }
+body.high-contrast .login-container { background: #111 !important; border: 2px solid #fff; color: #fff; }
+body.high-contrast .input-group input { background: #222 !important; color: #fff !important; border-color: #fff; }
+body.high-contrast .btn-submit { background: #fff !important; color: #000 !important; }
+body.high-contrast .sched-form { background: #111 !important; }
+body.high-contrast .appt-card { background: #111 !important; border: 1px solid #fff; }
+body.high-contrast .med-card { background: #111 !important; border: 1px solid #fff; }
+
+/* ── Responsividade das novas páginas (RNF02) ─────────────── */
+@media (max-width: 768px) {
+  .main-container { margin-top: 120px; padding: 16px; }
+  .hospitals-grid { grid-template-columns: 1fr; }
+  .filter-inline  { flex-direction: column; }
+  .card-actions   { flex-direction: column; }
+  .btn-action     { flex: none; width: 100%; }
+  #map            { height: 220px; }
+  .modal-box      { width: 95vw; padding: 20px; max-height: 90vh; }
+  .modal-grid     { grid-template-columns: 1fr; }
+  .sched-grid     { grid-template-columns: 1fr; }
+  .login-wrapper  { padding-top: 130px; }
+}
