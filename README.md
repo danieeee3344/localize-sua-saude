@@ -12,7 +12,7 @@ Plataforma full stack para localização de unidades de saúde na região do Val
 - Marcela Oliveira
 
 **Região Alvo:** Barra do Garças (MT), Pontal do Araguaia (MT) e Aragarças (GO)  
-**Versão:** 2.0  
+**Versão:** 3.0  
 
 ---
 
@@ -40,18 +40,21 @@ O sistema **Localize Sua Saúde** resolve a descentralização e a falta de visi
 - **GPS:** Botão "Usar minha localização" captura coordenadas via `navigator.geolocation`
 - **Status:** Feedback visual do estado da geolocalização
 
-### Acesso Rápido (US01–US05)
-- **Ver Hospitais e Clínicas:** Acesso direto à listagem de unidades
-- **Consultar Medicamentos:** Busca de disponibilidade por unidade
-- **Agendar Consulta:** Sistema de agendamento online
+### Autenticação e Segurança (RF08)
+- **Login/Cadastro:** Autenticação por e-mail e senha com perfis (cidadao, atendente, gestor)
+- **Token HMAC-SHA256:** Sessões assinadas com chave secreta (24h de expiração)
+- **Middleware:** Todas as rotas `/api/*` protegidas com validação de token
+- **Proteção de Rotas:** userId extraído do token validado no servidor (não mais do cliente)
+- **Cadastro Seguro:** Perfil forçado como `cidadao` no servidor (impede escalada de privilégio)
+
+### Agendamento de Consultas
+- **Agendar:** Seleção de unidade, especialidade, data e horário disponível
+- **Meus Agendamentos:** Listagem e cancelamento de consultas
+- **Avaliações:** Notas de 1 a 5 estrelas para unidades de saúde
 
 ### Navegação
 - **Navbar funcional:** Links reais para Início, Unidades de Saúde, Medicamentos, Agendamento
 - **Botão Login:** Acesso ao sistema de autenticação
-
-### Informações da Plataforma
-- **Faixa informativa:** 100% Gratuito, Georreferenciado, Acessível (WCAG 2.1), Funciona no celular
-- **Footer 4 colunas:** Informações da plataforma, Links úteis, Política de Privacidade (LGPD), Termos de Uso
 
 ---
 
@@ -59,121 +62,49 @@ O sistema **Localize Sua Saúde** resolve a descentralização e a falta de visi
 
 | Camada | Tecnologia | Versão |
 |--------|-----------|--------|
-| Frontend | React + Vite + CSS Customizado | React 18, Vite 5 |
-| Backend | Node.js + Express | Express 4 |
-| Banco de Dados | SQLite (better-sqlite3) | better-sqlite3 11 |
-| Segurança | Helmet + CORS + validator | Helmet 8, validator 13 |
+| Framework | Next.js (App Router) | 14 |
+| Frontend | React + TypeScript + Tailwind CSS | React 18 |
+| Backend | Next.js API Routes | - |
+| Banco de Dados | SQLite (sql.js via WASM) | sql.js 1.14 |
+| Segurança | Middleware + HMAC-SHA256 tokens | - |
 | API Externa | ViaCEP (consulta de CEP) | - |
-| Fonte | Google Fonts (Inter) | - |
 
 ---
 
 ## Estrutura do Projeto
 
 ```
-localizesaude/
-├── api/                              # Backend Node.js
-│   ├── .env                          # Variáveis de ambiente (PORT, ORIGEM_PERMITIDA)
-│   ├── package.json                  # Dependências e scripts
-│   ├── iniciarBanco.js               # Script DDL de criação da tabela leads
-│   ├── db/                           # Diretório do banco SQLite (runtime)
-│   │   └── landing.db                # Arquivo do banco de dados
-│   └── src/
-│       ├── server.js                 # Ponto de entrada - inicialização do servidor HTTP
-│       ├── app.js                    # Configuração do Express, CORS, Helmet, estáticos
-│       ├── config/
-│       │   └── conexaoBanco.js       # Conexão SQLite (better-sqlite3, WAL mode)
-│       ├── controladores/
-│       │   └── leadControlador.js    # Regras de negócio (cadastrar, listar leads)
-│       ├── rotas/
-│       │   └── leadRotas.js          # Rotas da API (POST/GET /api/leads)
-│       └── utilitarios/
-│           └── validadores.js        # Sanitização e validação de inputs
-│
-├── frontend/                         # Frontend React
-│   ├── package.json                  # Dependências React
-│   ├── vite.config.js                # Configuração Vite + proxy API
-│   ├── tailwind.config.js            # Configuração Tailwind CSS + cores do design system
-│   ├── postcss.config.js             # PostCSS (Tailwind + Autoprefixer)
-│   ├── index.html                    # HTML base com meta description e Google Fonts
-│   ├── public/
-│   │   └── logomarca.png             # Logo do projeto
-│   ├── dist/                         # Build de produção
-│   └── src/
-│       ├── main.jsx                  # Ponto de entrada React (createRoot)
-│       ├── App.jsx                   # Componente raiz orquestrador
-│       ├── index.css                 # Design system completo (CSS customizado)
-│       └── components/
-│           ├── AccessibilityBar.jsx  # Barra de acessibilidade (Modo Idoso, Contraste, A+/A-)
-│           ├── Header.jsx            # Navbar azul com links funcionais
-│           ├── Hero.jsx              # Logo + título + subtítulo das cidades
-│           ├── SearchSection.jsx     # Busca por texto, CEP (ViaCEP), GPS e 4 filtros
-│           ├── QuickAccess.jsx       # Botões de acesso rápido (Hospitais, Medicamentos, Agendamento)
-│           ├── AboutStrip.jsx        # Faixa informativa (Gratuito, Georreferenciado, WCAG, Mobile)
-│           └── Footer.jsx            # Rodapé 4 colunas
-│
-├── doc/                              # Documentação do projeto
-│   ├── plano_landingpage_nodejs.md   # Plano de arquitetura do sistema
-│   ├── plano_correcao.md             # Plano de correção de erros
-│   ├── plano_adequacao_design.md     # Plano de migração do design legado
-│   ├── requisitos-software.md        # Especificação de requisitos de software (SRS)
-│   └── requisitos-usuario.md         # Requisitos de usuário e histórias de uso
-│
-├── package.json                      # Scripts de conveniência (raiz)
-├── .gitignore                        # Arquivos ignorados pelo Git
-└── README.md                         # Este arquivo
+localizesuasaude/
+├── app/                              # Next.js App Router
+│   ├── api/                          # API Routes (backend)
+│   │   ├── auth/
+│   │   │   ├── login/route.ts        # POST /api/auth/login
+│   │   │   └── cadastro/route.ts     # POST /api/auth/cadastro
+│   │   ├── agendamentos/
+│   │   │   ├── route.ts              # GET/POST /api/agendamentos
+│   │   │   └── [id]/route.ts         # DELETE /api/agendamentos/:id
+│   │   └── avaliacoes/route.ts       # POST /api/avaliacoes
+│   ├── agendamento/page.tsx          # Página de agendamento
+│   ├── cadastro/page.tsx             # Página de cadastro
+│   ├── hospitais/page.tsx            # Listagem de unidades
+│   ├── login/page.tsx                # Página de login
+│   ├── medicamentos/page.tsx         # Consulta de medicamentos
+│   ├── components/                   # Componentes React
+│   │   ├── Header.tsx
+│   │   ├── Footer.tsx
+│   │   └── AccessibilityBar.tsx
+│   ├── layout.tsx                    # Layout raiz
+│   ├── page.tsx                      # Página inicial
+│   └── globals.css                   # Estilos globais
+├── lib/                              # Bibliotecas compartilhadas
+│   ├── auth.ts                       # Criação e verificação de tokens HMAC
+│   └── db.ts                         # Camada de banco de dados SQLite
+├── middleware.ts                      # Middleware de autenticação (Next.js)
+├── .env.example                      # Variáveis de ambiente (template)
+├── next.config.mjs                   # Configuração do Next.js
+├── package.json                      # Dependências e scripts
+└── tsconfig.json                     # Configuração TypeScript
 ```
-
----
-
-## Requisitos do Sistema
-
-### Atores
-
-| Ator | Descrição |
-|------|-----------|
-| Paciente / Cidadão | Busca atendimento médico, consulta horários, contatos e localizações |
-| Estabelecimento de Saúde | Gerencia perfil, atualiza horários, contatos e especialidades |
-| Administrador | Modera conteúdo, valida cadastros e gerencia a plataforma |
-
-### Requisitos Funcionais
-
-| ID | Requisito | Status |
-|----|-----------|--------|
-| RF01 | Busca e Filtragem de Estabelecimentos por nome, cidade, especialidade, tipo e atendimento | Implementado |
-| RF02 | Visualização em Mapa e Geolocalização | Implementado (GPS via navigator.geolocation) |
-| RF03 | Perfil Detalhado da Unidade de Saúde | Em desenvolvimento |
-| RF04 | Sistema de Avaliação e Feedbacks (1-5 estrelas) | Em desenvolvimento |
-| RF05 | Atalho para Contato Direto (Ligar Agora, WhatsApp) | Em desenvolvimento |
-| RF06 | Modo de Alta Acessibilidade para Idosos | Implementado |
-| RF07 | Moderação de Avaliações (painel administrativo) | Em desenvolvimento |
-
-### Requisitos Não Funcionais
-
-| ID | Categoria | Descrição | Prioridade |
-|----|-----------|-----------|------------|
-| RNF01 | Acessibilidade | WCAG 2.1 nível AA, suporte a leitores de tela | Alta |
-| RNF02 | Responsividade | Funcional em smartphones, tablets e desktop | Alta |
-| RNF03 | Desempenho | Carregamento < 3 segundos (3G/4G) | Média |
-| RNF04 | Segurança | Conformidade com LGPD, criptografia de dados | Alta |
-| RNF05 | Disponibilidade | Uptime mínimo de 99% (24/7) | Média |
-| RNF06 | Escalabilidade | Expansão para outras cidades sem perda de performance | Baixa |
-
-### Regras de Negócio
-
-- **RN01:** Novos estabelecimentos só ficam visíveis após aprovação do Administrador
-- **RN02:** Avaliações requerem cadastro e login prévio
-- **RN03:** Consulta de estabelecimentos é 100% gratuita para pacientes
-
-### Histórias de Usuário
-
-| Código | Descrição | Status |
-|--------|-----------|--------|
-| US01 | Localizar unidades de saúde (busca, GPS, CEP) | Implementado |
-| US02 | Filtrar unidades por serviços | Implementado |
-| US03 | Consultar medicamentos | Em desenvolvimento |
-| US04 | Atualizar estoque (Atendente) | Em desenvolvimento |
-| US05 | Agendar consultas | Em desenvolvimento |
 
 ---
 
@@ -194,189 +125,149 @@ cd localize-sua-saude
 ### 2. Instalar dependências
 
 ```bash
-# Instalar dependências da API
-cd api
 npm install
-
-# Instalar dependências do Frontend
-cd ../frontend
-npm install
-```
-
-Ou use o script da raiz:
-
-```bash
-npm run install:all
 ```
 
 ### 3. Configurar variáveis de ambiente
 
-O arquivo `api/.env` já vem configurado:
+Copie o `.env.example` para `.env` e configure a chave secreta:
+
+```bash
+cp .env.example .env
+```
+
+Edite o `.env`:
 
 ```env
-PORT=3000
-ORIGEM_PERMITIDA=*
+AUTH_SECRET=sua_chave_secreta_aqui_troque_em_producao
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
+
+> **IMPORTANTE:** O arquivo `.env` está no `.gitignore` e nunca deve ser commitado.
 
 ---
 
 ## Execução
 
-### Modo Desenvolvimento (dois terminais)
+### Modo Desenvolvimento
 
-**Terminal 1 — API Node.js (porta 3000):**
 ```bash
-cd api
 npm run dev
 ```
 
-**Terminal 2 — Frontend React via Vite (porta 5173):**
-```bash
-cd frontend
-npm run dev
-```
+Acesse: [http://localhost:3000](http://localhost:3000)
 
-**Acessos:**
-- Frontend React: `http://localhost:5173`
-- API RESTful: `http://localhost:3000/api/leads`
-- Health Check: `http://localhost:3000/api/health`
-
-### Modo Produção (via Express)
+### Modo Produção
 
 ```bash
-# 1. Compilar o frontend
-cd frontend
 npm run build
-
-# 2. Iniciar o servidor
-cd ../api
 npm start
 ```
 
-Acesse: `http://localhost:3000`
-
 ---
 
-## API RESTful
+## API
 
-### Endpoints
+### Endpoints Públicos (sem autenticação)
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/api/health` | Health check da API |
-| `POST` | `/api/leads` | Cadastrar um novo lead |
-| `GET` | `/api/leads` | Listar leads com paginação |
+| `POST` | `/api/auth/login` | Autenticar usuário (retorna token) |
+| `POST` | `/api/auth/cadastro` | Cadastrar novo usuário |
 
-### Exemplo: Cadastrar Lead
+### Endpoints Protegidos (requer `Authorization: Bearer <token>`)
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| `GET` | `/api/agendamentos` | Listar agendamentos do usuário logado |
+| `POST` | `/api/agendamentos` | Criar novo agendamento |
+| `DELETE` | `/api/agendamentos/:id` | Cancelar agendamento |
+| `POST` | `/api/avaliacoes` | Criar avaliação para una unidade |
+
+### Exemplo: Login
 
 ```bash
-curl -X POST http://localhost:3000/api/leads \
+curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{
-    "nome_completo": "Maria Silva",
-    "email": "maria@exemplo.com",
-    "telefone_whatsapp": "(66) 99999-0000",
-    "mensagem": "Gostaria de saber mais"
-  }'
+  -d '{"email": "cidadao@teste.com", "senha": "123456"}'
 ```
 
-**Resposta (201):**
+**Resposta:**
 ```json
 {
-  "sucesso": true,
-  "mensagem": "Os dados do formulário foram enviados com sucesso!"
+  "ok": true,
+  "usuario": { "id": 1, "nome": "Maria Silva", "email": "cidadao@teste.com", "perfil": "cidadao" },
+  "token": "eyJhbGciOi..."
 }
 ```
 
-### Exemplo: Listar Leads
+### Exemplo: Criar Agendamento (com token)
 
 ```bash
-curl http://localhost:3000/api/leads?pagina=1&limite=10
+curl -X POST http://localhost:3000/api/agendamentos \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{"unidade": "UBS Central", "especialidade": "Clínico Geral", "data": "2025-01-15", "horario": "09:00", "paciente": "Maria Silva"}'
 ```
-
-**Resposta (200):**
-```json
-{
-  "sucesso": true,
-  "dados": [...],
-  "total": 8,
-  "pagina": 1,
-  "limite": 10
-}
-```
-
-### Validações
-
-| Campo | Regra |
-|-------|-------|
-| `nome_completo` | Obrigatório, 3-150 caracteres |
-| `email` | Obrigatório, formato válido |
-| `telefone_whatsapp` | Obrigatório, 10-15 dígitos |
-| `mensagem` | Opcional, máx. 500 caracteres |
 
 ---
 
 ## Banco de Dados
 
-SQLite com `better-sqlite3` (modo WAL habilitado).
+SQLite via sql.js (WebAssembly), persistido em `data/lss.db`.
 
-### Tabela `leads`
+### Tabelas
 
 ```sql
-CREATE TABLE IF NOT EXISTS leads (
-    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome_completo       TEXT    NOT NULL,
-    email               TEXT    NOT NULL,
-    telefone_whatsapp   TEXT    NOT NULL,
-    mensagem            TEXT    DEFAULT NULL,
-    data_cadastro       TEXT    DEFAULT (datetime('now','localtime')),
-    status_atendimento  TEXT    DEFAULT 'novo'
-                        CHECK(status_atendimento IN ('novo','contatado','convertido','perdido'))
+-- Usuários
+CREATE TABLE usuarios (
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,
+  nome      TEXT    NOT NULL,
+  email     TEXT    NOT NULL UNIQUE COLLATE NOCASE,
+  senha     TEXT    NOT NULL,
+  perfil    TEXT    NOT NULL DEFAULT 'cidadao',
+  criado_em TEXT    DEFAULT (datetime('now'))
 );
 
-CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email);
-CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status_atendimento);
+-- Agendamentos
+CREATE TABLE agendamentos (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  usuario_id    INTEGER NOT NULL REFERENCES usuarios(id),
+  unidade       TEXT    NOT NULL,
+  especialidade TEXT    NOT NULL,
+  data          TEXT    NOT NULL,
+  horario       TEXT    NOT NULL,
+  paciente      TEXT    NOT NULL,
+  cpf           TEXT,
+  telefone      TEXT,
+  observacoes   TEXT,
+  status        TEXT    NOT NULL DEFAULT 'confirmado',
+  criado_em     TEXT    DEFAULT (datetime('now'))
+);
+
+-- Avaliações
+CREATE TABLE avaliacoes (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  usuario_id INTEGER NOT NULL REFERENCES usuarios(id),
+  unidade_id TEXT    NOT NULL,
+  nota       INTEGER NOT NULL CHECK (nota BETWEEN 1 AND 5),
+  comentario TEXT,
+  criado_em  TEXT    DEFAULT (datetime('now'))
+);
 ```
 
-O banco é criado automaticamente ao iniciar o servidor.
-
----
-
-## Design System
-
-O projeto utiliza um design system customizado inspirado no protótipo legado:
-
-### Cores
-
-| Variável | Hex | Uso |
-|----------|-----|-----|
-| `--clr-primary` | `#0051bb` | Cor principal (azul) |
-| `--clr-primary-dk` | `#003a8a` | Azul escuro (hover) |
-| `--clr-accent` | `#00bb38` | Cor de destaque (verde) |
-| `--clr-accent-dk` | `#007d24` | Verde escuro (hover) |
-| `--clr-purple` | `#7d8aff` | Roxo (mapas) |
-| `--clr-bg` | `#f0f4ff` | Fundo da aplicação |
-| `--clr-text` | `#1a1d2c` | Texto principal |
-| `--clr-muted` | `#4a5568` | Texto secundário |
-| `--clr-border` | `#d1d9e6` | Bordas |
-
-### Componentes Visuais
-
-- **Barra de Acessibilidade:** Fundo `#1a1d2c`, fixa no topo, z-index 2000
-- **Navbar:** Fundo `#0051bb`, fixa abaixo da barra de acessibilidade
-- **Cards:** Border-radius 12px, sombras azuis sutis
-- **Botões:** Border-radius 12px, transições suaves
-- **Chips:** Border-radius 999px (pill shape)
+O banco e as tabelas são criados automaticamente ao iniciar o servidor.
 
 ---
 
 ## Segurança
 
-- **Helmet:** Proteção de cabeçalhos HTTP (CSP desabilitado para desenvolvimento)
-- **CORS:** Configurável via `ORIGEM_PERMITIDA` no `.env`
-- **Sanitização:** Inputs validados e escapados com `validator` (trim, escape, isEmail)
+- **Middleware de Autenticação:** Todas as rotas `/api/*` (exceto login/cadastro) requerem token válido
+- **Tokens HMAC-SHA256:** Sessões assinadas com `AUTH_SECRET` do `.env`, expiração de 24h
+- **userId do Token:** O identificador do usuário é extraído do token validado no servidor, não mais confiado do cliente
+- **Cadastro Seguro:** Perfil de usuário é forçado como `cidadao` no servidor
+- **.env Protegido:** Variáveis sensíveis nunca são commitadas (`.gitignore`)
 - **Prepared Statements:** Queries parametrizadas para prevenir SQL Injection
-- **Body Parser:** Limitado a 10KB para prevenir payloads excessivos
 
 ---
 
@@ -386,30 +277,8 @@ O projeto utiliza um design system customizado inspirado no protótipo legado:
 |------|-----------|-----------|
 | **Fase 1** | Levantamento de requisitos | Documentação (req-system, req-user) |
 | **Fase 2** | Protótipo funcional | HTML/CSS/JS estático + sql.js (WASM) |
-| **Fase 3** | Sistema full stack atual | React 18 + Node.js + Express + SQLite |
-
-Os protótipos anteriores foram removidos após a migração completa das funcionalidades para o React.
-
----
-
-## Desenvolvimento
-
-### Padrões de Código
-
-- 100% do código, variáveis, funções e comentários em **português brasileiro**
-- Arquitetura em camadas: Rotas → Controladores → Configuração → Utilitários
-- Componentes React funcionais com hooks (useState, useEffect)
-- Design system customizado com CSS variables
-
-### Scripts Disponíveis
-
-| Script | Descrição |
-|--------|-----------|
-| `npm run dev:api` | Inicia a API em modo desenvolvimento (com --watch) |
-| `npm run dev:frontend` | Inicia o Vite em modo desenvolvimento |
-| `npm run build` | Compila o frontend para produção |
-| `npm run start` | Inicia o servidor Express (produção) |
-| `npm run install:all` | Instala dependências de API e Frontend |
+| **Fase 3** | Backend + Frontend separados | React 18 + Node.js/Express + better-sqlite3 |
+| **Fase 4** | Sistema integrado atual | Next.js 14 (App Router) + sql.js + HMAC auth |
 
 ---
 
