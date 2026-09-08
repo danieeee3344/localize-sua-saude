@@ -1,0 +1,128 @@
+@startuml LocalizeSuaSaude_FluxoAgendamento
+skinparam activity {
+  BackgroundColor #F0F4FF
+  BorderColor #0051BB
+  ArrowColor #0051BB
+  FontSize 12
+}
+skinparam activityDiamond {
+  BackgroundColor #FFE0B2
+  BorderColor #FF9800
+}
+skinparam note {
+  BackgroundColor #FFF8E1
+  BorderColor #FFC107
+}
+
+title Diagrama de Atividade - Fluxo de Agendamento (UC08)\nConforme UML 2.5.1
+
+start
+
+:Início do Fluxo;
+
+if (Usuário está logado?) then (Não)
+  :Exibir mensagem "Faça login para agendar";
+  note right: Mensagem amarela\ncom botões de ação
+  :Redirecionar para /login;
+  stop
+else (Sim)
+endif
+
+:Exibir formulário de agendamento;
+
+:Selecionar Unidade de Saúde;
+
+if (Unidade = "UPA 24h"?) then (Sim)
+  :Exibir mensagem:
+  "UPA 24h atende por demanda
+  espontânea - não é necessário
+  agendamento";
+  note right: UPA não permite\nagendamento prévio
+  stop
+else (Não)
+endif
+
+:Selecionar Especialidade;
+
+:Selecionar Data da Consulta;
+
+if (Data é válida?) then (Não)
+  :Exibir erro "Data inválida";
+  :Corrigir data;
+  backward :Selecionar nova data;
+else (Sim)
+endif
+
+: Sistema consulta horários disponíveis;
+
+if (Existem horários disponíveis?) then (Não)
+  :Exibir mensagem:
+  "Nenhum horário disponível
+  para essa data";
+  note right: Sem slots\ndisponíveis
+  stop
+else (Sim)
+endif
+
+:Exibir grid de horários disponíveis;
+
+:Selecionar Horário;
+
+: Preencher dados do paciente:
+- Nome (obrigatório)
+- CPF (opcional)
+- Telefone (opcional)
+- Observações (opcional);
+
+if (Campos obrigatórios preenchidos?) then (Não)
+  :Exibir erros de validação;
+  backward :Preencher campos obrigatórios;
+else (Sim)
+endif
+
+: Usuário clica em "Confirmar Agendamento";
+
+: Sistema valida todos os dados;
+
+if (Dados válidos?) then (Não)
+  :Exibir mensagens de erro;
+  backward :Corrigir dados;
+else (Sim)
+endif
+
+:Chamar API POST /api/agendamentos;
+
+: API valida:
+- usuarioId existe
+- unidade é válida
+- especialidade é válida
+- data/horário são futuros;
+
+if (API retornou sucesso?) then (Não)
+  :Exibir erro da API;
+  backward :Corrigir dados;
+else (Sim)
+endif
+
+: Salvar agendamento no SQLite;
+
+: Atualizar status do slot como ocupado;
+
+: Retornar {ok: true, id: novoAgendamento};
+
+:Exibir mensagem de confirmação:
+"Consulta agendada com sucesso!
+Unidade: {unidade}
+Especialidade: {especialidade}
+Data: {data} às {horário}
+Paciente: {paciente}";
+
+:Chamar API GET /api/agendamentos?usuarioId=X;
+
+: Atualizar lista "Meus Agendamentos";
+
+:Fim do Fluxo;
+
+stop
+
+@enduml

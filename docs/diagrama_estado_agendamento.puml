@@ -1,0 +1,68 @@
+@startuml LocalizeSuaSaude_EstadoAgendamento
+skinparam state {
+  BackgroundColor #F0F4FF
+  BorderColor #0051BB
+  FontSize 12
+}
+skinparam state {
+  BackgroundColor #E8F5E9
+  BorderColor #4CAF50
+}
+skinparam state {
+  BackgroundColor #FFEBEE
+  BorderColor #F44336
+}
+
+title Diagrama de Estado - Agendamento\nConforme UML 2.5.1
+
+[*] --> Criando : Usuário inicia\nagendamento
+
+Criando --> Confirmado : Usuário confirma\nagendamento
+Criando --> Cancelado : Usuário cancela\nantes de confirmar
+
+Confirmado --> EmAndamento : Data da consulta\nchegou
+Confirmado --> Cancelado : Usuário solicita\ncancelamento
+Confirmado --> Reagendado : Usuário solicita\nreagendamento
+
+EmAndamento --> Concluido : Consulta\nrealizada
+EmAndamento --> Cancelado : Paciente não\ncompareceu
+
+Reagendado --> Confirmado : Nova data\nselecionada
+Reagendado --> Cancelado : Usuário cancela\nreagendamento
+
+Concluido --> [*]
+Cancelado --> [*]
+
+state Criando {
+  state "Aguardando seleção de:" as Wait
+  Wait --> Wait : Unidade\nEspecialidade\nData\nHorário
+}
+
+state Confirmado {
+  state "Dados persistidos\nno SQLite" as Persisted
+}
+
+state EmAndamento {
+  state "Data/hora atual\n>= data agendada" as Current
+}
+
+note right of Criando
+  O agendamento ainda não
+  foi salvo no banco de dados.
+  O usuário pode preencher
+  e alterar campos livremente.
+end note
+
+note left of Confirmado
+  Agendamento salvo com
+  sucesso no SQLite.
+  Status: "confirmado"
+end note
+
+note right of Cancelado
+  Agendamento cancelado
+  pelo usuário.
+  Status: "cancelado"
+end note
+
+@enduml

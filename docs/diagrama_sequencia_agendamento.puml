@@ -1,0 +1,122 @@
+@startuml LocalizeSuaSaude_SequenciaAgendamento
+skinparam sequence {
+  ArrowColor #0051BB
+  ActorBorderColor #0051BB
+  LifeLineBorderColor #0051BB
+  ParticipantBorderColor #0051BB
+  ParticipantBackgroundColor #F0F4FF
+  NoteBackgroundColor #FFF8E1
+  NoteBorderColor #FFC107
+  FontSize 12
+}
+
+title Diagrama de Sequência - Agendamento (UC08)\nConforme UML 2.5.1
+
+actor "Cidadão" as User
+participant "Frontend\n(React)" as FE
+participant "API\n/api/agendamentos" as API
+database "SQLite\n(DB)" as DB
+
+== Fluxo Principal: Agendamento Bem-sucedido ==
+
+User -> FE : 1. Acessa página /agendamento
+activate FE
+
+FE -> FE : 2. Verifica localStorage\n(loggedIn, userId)
+
+alt Não está logado
+  FE --> User : 3. Exibe aviso:\n"Faça login para agendar"
+  deactivate FE
+else Está logado
+  FE -> API : 3. GET /api/agendamentos?usuarioId=X
+  activate API
+  API -> DB : 4. SELECT * FROM agendamentos\nWHERE usuario_id = ?
+  activate DB
+  DB --> API : 5. Retorna agendamentos
+  deactivate DB
+  API --> FE : 6. {ok: true, agendamentos: [...]}
+  deactivate API
+  FE --> User : 7. Exibe lista de agendamentos
+  deactivate FE
+
+  User -> FE : 8. Seleciona unidade
+  User -> FE : 9. Seleciona especialidade
+  User -> FE : 10. Seleciona data
+  activate FE
+
+  FE -> FE : 11. Calcula horários disponíveis\n(baseado em slotsData)
+  
+  FE --> User : 12. Exibe grid de horários
+
+  User -> FE : 13. Seleciona horário
+  User -> FE : 14. Preenche dados do paciente
+  User -> FE : 15. Clica "Confirmar Agendamento"
+  activate FE
+
+  FE -> API : 16. POST /api/agendamentos\n{usuarioId, unidade, especialidade,\ndata, horario, paciente, cpf, telefone, observacoes}
+  activate API
+
+  API -> API : 17. Valida campos obrigatórios
+
+  API -> DB : 18. INSERT INTO agendamentos\n(usuario_id, unidade, especialidade,\ndata, horario, paciente, cpf, telefone, observacoes)
+  activate DB
+  DB --> API : 19. Retorna last_insert_rowid()
+  deactivate DB
+
+  API -> DB : 20. Persiste alterações no disco
+  activate DB
+  DB --> API : 21. OK
+  deactivate DB
+
+  API --> FE : 22. {ok: true, id: novoId}
+  deactivate API
+
+  FE -> FE : 23. Limpa formulário
+
+  FE --> User : 24. Exibe confirmação:\n"Consulta agendada com sucesso!"
+  deactivate FE
+
+  User -> FE : 25. Confirma visualização
+  activate FE
+
+  FE -> API : 26. GET /api/agendamentos?usuarioId=X
+  activate API
+  API -> DB : 27. SELECT FROM agendamentos
+  activate DB
+  DB --> API : 28. Retorna lista atualizada
+  deactivate DB
+  API --> FE : 29. {ok: true, agendamentos: [...]}
+  deactivate API
+
+  FE --> User : 30. Atualiza "Meus Agendamentos"
+  deactivate FE
+
+end
+
+deactivate User
+
+== Fluxo Alternativo: UPA 24h Selecionada ==
+
+User -> FE : 1. Seleciona "UPA 24h"
+activate FE
+
+FE --> User : 2. Exibe mensagem:\n"UPA 24h atende por demanda\nespontânea - sem agendamento"
+deactivate FE
+
+deactivate User
+
+== Fluxo Alternativo: Sem Horários Disponíveis ==
+
+User -> FE : 1. Seleciona unidade e data
+activate FE
+
+FE -> FE : 2. Verifica slotsData[unidade]
+
+alt Nenhum slot disponível
+  FE --> User : 3. Exibe:\n"Nenhum horário disponível\npara essa data"
+  deactivate FE
+end
+
+deactivate User
+
+@enduml

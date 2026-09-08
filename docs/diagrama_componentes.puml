@@ -1,0 +1,108 @@
+@startuml LocalizeSuaSaude_Componentes
+skinparam component {
+  BackgroundColor #F0F4FF
+  BorderColor #0051BB
+  FontSize 12
+}
+skinparam package {
+  BackgroundColor #FFFFFF
+  BorderColor #0051BB
+}
+skinparam database {
+  BackgroundColor #E8F5E9
+  BorderColor #4CAF50
+}
+skinparam node {
+  BackgroundColor #FFF8E1
+  BorderColor #FFC107
+}
+
+title Diagrama de Componentes - Localize Sua Saúde\nConforme UML 2.5.1
+
+node "Navegador do Usuário" as browser {
+  package "Frontend (React/Next.js)" as frontend {
+    component "Página Inicial\n(page.tsx)" as Home
+    component "Página Login\n(login/page.tsx)" as Login
+    component "Página Cadastro\n(cadastro/page.tsx)" as Cadastro
+    component "Página Hospitais\n(hospitais/page.tsx)" as Hospitais
+    component "Página Agendamento\n(agendamento/page.tsx)" as Agendamento
+    component "Página Medicamentos\n(medicamentos/page.tsx)" as Medicamentos
+    
+    component "Componentes Reutilizáveis" as components {
+      component "Header" as Header
+      component "Footer" as Footer
+      component "AccessibilityBar" as A11y
+    }
+  }
+}
+
+node "Servidor Next.js" as server {
+  package "API Routes" as api {
+    component "/api/auth/login" as LoginAPI
+    component "/api/auth/cadastro" as CadastroAPI
+    component "/api/agendamentos" as AgendAPI
+    component "/api/agendamentos/[id]" as AgendIDAPI
+    component "/api/avaliacoes" as AvalAPI
+  }
+  
+  package "Camada de Dados" as data {
+    component "lib/db.ts\n(Gerenciamento SQLite)" as DBLayer
+    component "sql.js\n(SQLite via WASM)" as SQLJS
+  }
+}
+
+database "Banco de Dados" as db {
+  component "data/lss.db\n(SQLite)" as SQLite
+}
+
+node "Serviços Externos" as external {
+  component "ViaCEP\n(Consulta CEP)" as ViaCEP
+  component "Google Maps\n(Rota)" as Maps
+  component "WhatsApp\n(Mensagem)" as WhatsApp
+}
+
+' === Conexões Frontend -> API ===
+Home --> LoginAPI : POST /api/auth/login
+Home --> AgendAPI : GET/POST
+Hospitais --> AvalAPI : POST /api/avaliacoes
+Agendamento --> AgendAPI : GET/POST
+Agendamento --> AgendIDAPI : DELETE
+Cadastro --> CadastroAPI : POST /api/auth/cadastro
+
+' === Conexões API -> Camada de Dados ===
+LoginAPI --> DBLayer
+CadastroAPI --> DBLayer
+AgendAPI --> DBLayer
+AgendIDAPI --> DBLayer
+AvalAPI --> DBLayer
+
+' === Conexões Camada de Dados -> SQLite ===
+DBLayer --> SQLJS
+SQLJS --> SQLite : Lê/Salva
+
+' === Conexões Frontend -> Serviços Externos ===
+Home --> ViaCEP : Busca CEP
+Hospitais --> Maps : Abre rota
+Hospitais --> WhatsApp : Envia mensagem
+
+' === Conexões Componentes ===
+Home --> Header
+Home --> Footer
+Home --> A11y
+Login --> Header
+Login --> Footer
+Login --> A11y
+Cadastro --> Header
+Cadastro --> Footer
+Cadastro --> A11y
+Hospitais --> Header
+Hospitais --> Footer
+Hospitais --> A11y
+Agendamento --> Header
+Agendamento --> Footer
+Agendamento --> A11y
+Medicamentos --> Header
+Medicamentos --> Footer
+Medicamentos --> A11y
+
+@enduml

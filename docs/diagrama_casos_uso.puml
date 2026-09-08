@@ -1,0 +1,90 @@
+@startuml LocalizeSuaSaude_CasoDeUso
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+skinparam usecase {
+  BackgroundColor #F0F4FF
+  BorderColor #0051BB
+  ArrowColor #0051BB
+  FontSize 12
+}
+skinparam actor {
+  BackgroundColor #0051BB
+  BorderColor #003A8A
+  FontColor white
+}
+skinparam rectangle {
+  BackgroundColor #FFFFFF
+  BorderColor #0051BB
+}
+
+title Diagrama de Casos de Uso - Localize Sua Saúde\n(Conforme UML 2.5.1)
+
+rectangle "SISTEMA LOCALIZE SUA SAÚDE" as sistema {
+
+  ' === ATORES ===
+  actor "Cidadão" as C
+  actor "Atendente" as A
+  actor "Gestor" as G
+
+  ' === CASOS DE USO ===
+  usecase "UC01: Buscar Unidades de Saúde" as UC01
+  usecase "UC02: Visualizar Detalhes da Unidade" as UC02
+  usecase "UC03: Consultar Medicamentos" as UC03
+  usecase "UC04: Geolocalizar (GPS)" as UC04
+  usecase "UC05: Buscar por CEP" as UC05
+  usecase "UC06: Fazer Login" as UC06
+  usecase "UC07: Cadastrar Usuário" as UC07
+  usecase "UC08: Agendar Consulta" as UC08
+  usecase "UC09: Avaliar Unidade" as UC09
+  usecase "UC10: Cancelar Agendamento" as UC10
+  usecase "UC11: Consultar Meus Agendamentos" as UC11
+  usecase "UC12: Alterar Acessibilidade" as UC12
+  usecase "UC13: Gerenciar Usuários" as UC13
+  usecase "UC14: Visualizar Relatórios" as UC14
+
+  ' === RELACIONAMENTOS CIDADÃO ===
+  C --> UC01
+  C --> UC02
+  C --> UC03
+  C --> UC04
+  C --> UC05
+  C --> UC06
+  C --> UC07
+  C --> UC08
+  C --> UC09
+  C --> UC10
+  C --> UC11
+  C --> UC12
+
+  ' === RELACIONAMENTOS ATENDENTE ===
+  A --> UC06
+  A --> UC03
+
+  ' === RELACIONAMENTOS GESTOR ===
+  G --> UC06
+  G --> UC13
+  G --> UC14
+
+  ' === INCLUSÕES ===
+  UC08 ..> UC06 : <<include>>
+  UC09 ..> UC06 : <<include>>
+  UC10 ..> UC06 : <<include>>
+  UC11 ..> UC06 : <<include>>
+
+  ' === EXTENSÕES ===
+  UC01 ..> UC04 : <<extend>>
+  UC01 ..> UC05 : <<extend>>
+  UC02 ..> UC09 : <<extend>>
+
+}
+
+legend bottom left
+  |= Símbolo | Descrição |
+  | --> | Participação |
+  | ..> | Inclusão/Extensão |
+  | <<include>> | Inclusão obrigatória |
+  | <<extend>> | Extensão opcional |
+end legend
+
+@enduml

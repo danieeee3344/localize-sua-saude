@@ -1,0 +1,90 @@
+@startuml LocalizeSuaSaude_SequenciaLogin
+skinparam sequence {
+  ArrowColor #0051BB
+  ActorBorderColor #0051BB
+  LifeLineBorderColor #0051BB
+  ParticipantBorderColor #0051BB
+  ParticipantBackgroundColor #F0F4FF
+  NoteBackgroundColor #FFF8E1
+  NoteBorderColor #FFC107
+  FontSize 12
+}
+
+title Diagrama de Sequência - Login (UC06)\nConforme UML 2.5.1
+
+actor "Cidadão" as User
+participant "Frontend\n(React)" as FE
+participant "API\n/auth/login" as API
+database "SQLite\n(DB)" as DB
+
+== Fluxo Principal: Login Bem-sucedido ==
+
+User -> FE : 1. Acessa página /login
+activate FE
+FE --> User : 2. Exibe formulário de login
+
+User -> FE : 3. Informa e-mail e senha
+activate FE
+
+User -> FE : 4. Clica "ENTRAR"
+activate FE
+
+FE -> API : 5. POST /api/auth/login\n{email, senha}
+activate API
+
+API -> DB : 6. SELECT id, nome, email, perfil\nFROM usuarios\nWHERE email = ? AND senha = ?
+activate DB
+DB --> API : 7. Retorna row (ou vazio)
+deactivate DB
+
+API -> API : 8. Compara hash SHA-256 da senha
+
+alt Senha correta
+  API --> FE : 9. {ok: true, usuario: {id, nome, email, perfil}}
+  deactivate API
+  
+  FE -> FE : 10. Salva no localStorage:\n- loggedIn: "true"\n- userId: usuario.id\n- userPerfil: usuario.perfil\n- userName: usuario.nome
+  
+  FE --> User : 11. Redireciona para /
+  deactivate FE
+  
+  User -> FE : 12. Acessa página inicial\n(dados da sessão disponíveis)
+  activate FE
+  FE --> User : 13. Exibe saudação e opções\npersonalizadas
+  deactivate FE
+
+else Senha incorreta ou e-mail não cadastrado
+  API --> FE : 9. {ok: false, erro: "E-mail ou senha incorretos"}
+  deactivate API
+  
+  FE --> User : 10. Exibe mensagem de erro\ncom dica de teste
+  deactivate FE
+
+end
+
+deactivate User
+
+== Fluxo Alternativo: Erro de Conexão ==
+
+User -> FE : 1. Acessa /login
+activate FE
+
+User -> FE : 2. Informa dados e clica "ENTRAR"
+
+FE -> API : 3. POST /api/auth/login
+activate API
+
+API -> DB : 4. Tentativa de conexão falha
+activate DB
+DB --> API : 5. Erro de conexão
+deactivate DB
+
+API --> FE : 6. {ok: false, erro: "Erro interno"}
+deactivate API
+
+FE --> User : 7. Exibe "Falha de conexão com o banco de dados"
+deactivate FE
+
+deactivate User
+
+@enduml
