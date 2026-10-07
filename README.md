@@ -1,294 +1,137 @@
-# Localize Sua Saúde
+# Localize Sua Saúde (Vale do Araguaia)
 
-Plataforma full stack para localização de unidades de saúde na região do Vale do Araguaia, desenvolvida como projeto acadêmico para a matéria de Projeto e Desenvolvimento de Sistemas.
+Plataforma Web Full-Stack para localização de unidades de saúde, consulta de estoque de medicamentos, agendamento de consultas e avaliações comunitárias na região conurbada de **Barra do Garças (MT)**, **Pontal do Araguaia (MT)** e **Aragarças (GO)**.
 
-**Matéria:** Projeto e Desenvolvimento de Sistemas — 3º Ano A, Informática  
+Desenvolvido para a matéria de **Projeto e Desenvolvimento de Sistemas** — 3º Ano A (Informática)  
 **Professor:** Carlos David  
-
-**Equipe:**
-- Hemily Gouveia
-- Daniel Reges
-- Beatriz Telles
-- Marcela Oliveira
-
-**Região Alvo:** Barra do Garças (MT), Pontal do Araguaia (MT) e Aragarças (GO)  
-**Versão:** 3.0  
+**Equipe:** Hemily Gouveia, Daniel Reges, Beatriz Telles e Marcela Oliveira  
+**Versão:** 3.0.0  
 
 ---
 
-## Visão Geral
+## 🏗️ Arquitetura e Estrutura do Projeto
 
-O sistema **Localize Sua Saúde** resolve a descentralização e a falta de visibilidade digital dos serviços de saúde na região do Vale do Araguaia. A plataforma reunirá hospitais, clínicas e laboratórios em um único ambiente digital, oferecendo busca interativa, localização georreferenciada, consulta de medicamentos, agendamento de consultas e avaliações comunitárias — com atenção especial à acessibilidade para idosos.
-
----
-
-## Funcionalidades Implementadas
-
-### Acessibilidade (RF06 / RNF01)
-- **Modo Idoso:** Amplia fontes e elementos interativos para facilitar o uso por idosos
-- **Alto Contraste:** Alterna esquema de cores para melhorar legibilidade
-- **Controle de Fonte (A+ / A-):** Ajusta o tamanho da fonte em 6 níveis
-- **Persistência:** Preferências salvas no `localStorage` e restauradas automaticamente
-
-### Busca e Filtragem (RF01)
-- **Busca por texto:** Pesquisa por nome, especialidade ou cidade
-- **Busca por CEP:** Integração com ViaCEP API para buscar endereço e redirecionar
-- **Máscara de CEP:** Formatação automática do campo CEP (00000-000)
-- **4 Filtros:** Cidade, Tipo (Hospital/Clínica/Laboratório/UBS), Atendimento (SUS/Particular/Convênio), Especialidade
-
-### Geolocalização (RF02 / US01)
-- **GPS:** Botão "Usar minha localização" captura coordenadas via `navigator.geolocation`
-- **Status:** Feedback visual do estado da geolocalização
-
-### Autenticação e Segurança (RF08)
-- **Login/Cadastro:** Autenticação por e-mail e senha com perfis (cidadao, atendente, gestor)
-- **Token HMAC-SHA256:** Sessões assinadas com chave secreta (24h de expiração)
-- **Middleware:** Todas as rotas `/api/*` protegidas com validação de token
-- **Proteção de Rotas:** userId extraído do token validado no servidor (não mais do cliente)
-- **Cadastro Seguro:** Perfil forçado como `cidadao` no servidor (impede escalada de privilégio)
-
-### Agendamento de Consultas
-- **Agendar:** Seleção de unidade, especialidade, data e horário disponível
-- **Meus Agendamentos:** Listagem e cancelamento de consultas
-- **Avaliações:** Notas de 1 a 5 estrelas para unidades de saúde
-
-### Navegação
-- **Navbar funcional:** Links reais para Início, Unidades de Saúde, Medicamentos, Agendamento
-- **Botão Login:** Acesso ao sistema de autenticação
-
----
-
-## Stack Tecnológica
-
-| Camada | Tecnologia | Versão |
-|--------|-----------|--------|
-| Framework | Next.js (App Router) | 14 |
-| Frontend | React + TypeScript + Tailwind CSS | React 18 |
-| Backend | Next.js API Routes | - |
-| Banco de Dados | SQLite (sql.js via WASM) | sql.js 1.14 |
-| Segurança | Middleware + HMAC-SHA256 tokens | - |
-| API Externa | ViaCEP (consulta de CEP) | - |
-
----
-
-## Estrutura do Projeto
+O projeto segue estritamente a separação modular de responsabilidades:
 
 ```
-localizesuasaude/
-├── app/                              # Next.js App Router
-│   ├── api/                          # API Routes (backend)
-│   │   ├── auth/
-│   │   │   ├── login/route.ts        # POST /api/auth/login
-│   │   │   └── cadastro/route.ts     # POST /api/auth/cadastro
-│   │   ├── agendamentos/
-│   │   │   ├── route.ts              # GET/POST /api/agendamentos
-│   │   │   └── [id]/route.ts         # DELETE /api/agendamentos/:id
-│   │   └── avaliacoes/route.ts       # POST /api/avaliacoes
-│   ├── agendamento/page.tsx          # Página de agendamento
-│   ├── cadastro/page.tsx             # Página de cadastro
-│   ├── hospitais/page.tsx            # Listagem de unidades
-│   ├── login/page.tsx                # Página de login
-│   ├── medicamentos/page.tsx         # Consulta de medicamentos
-│   ├── components/                   # Componentes React
-│   │   ├── Header.tsx
-│   │   ├── Footer.tsx
-│   │   └── AccessibilityBar.tsx
-│   ├── layout.tsx                    # Layout raiz
-│   ├── page.tsx                      # Página inicial
-│   └── globals.css                   # Estilos globais
-├── lib/                              # Bibliotecas compartilhadas
-│   ├── auth.ts                       # Criação e verificação de tokens HMAC
-│   └── db.ts                         # Camada de banco de dados SQLite
-├── middleware.ts                      # Middleware de autenticação (Next.js)
-├── .env.example                      # Variáveis de ambiente (template)
-├── next.config.mjs                   # Configuração do Next.js
-├── package.json                      # Dependências e scripts
-└── tsconfig.json                     # Configuração TypeScript
+localize-sua-saude/
+├── Doc/                                 # Documentação do Projeto
+│   ├── escopo_do_projeto.md             # Escopo SMART, EAP e Governança
+│   ├── requisitos_de_sistema.md         # Requisitos de Sistema (RSF/RSNF)
+│   ├── requisitos_de_usuario.md         # Requisitos de Usuário (Histórias/Critérios)
+│   ├── requisitos-software.md           # Especificação de Requisitos (RF01-RF07)
+│   ├── auditoria_autenticacao.md        # Relatório de Auditoria de Segurança
+│   ├── checklist_commit_seguro.md       # Diretrizes de Commits Seguros
+│   ├── plano_correcao.md                # Plano de Resolução e Melhorias
+│   └── *.puml                           # Diagramas UML (Casos de Uso, Sequência, etc.)
+│
+├── API/                                 # Backend (Node.js + Express)
+│   ├── src/
+│   │   ├── config/                      # Conexão com SQLite
+│   │   ├── controladores/               # Auth, Unidades, Medicamentos, Agendamentos, Avaliações, Leads
+│   │   ├── rotas/                       # Endpoints RESTful (/api/*)
+│   │   ├── utilitarios/                 # Criptografia, Tokens JWT/HMAC, Validações, Rate Limit
+│   │   ├── app.js                       # Configuração do Express, CORS e Middlewares
+│   │   └── server.js                    # Inicialização do servidor
+│   ├── db/                              # 💾 DB (Banco de Dados SQLite — acessado apenas pelo backend)
+│   │   └── saude.db                     # Arquivo de persistência (ignorado no Git)
+│   ├── iniciarBanco.js                  # Script de criação de schema, tabelas e seeds
+│   ├── package.json                     # Dependências do Backend
+│   └── .env.example                     # Modelo de variáveis de ambiente do backend
+│
+├── Frontend/                            # Frontend (HTML5, CSS, React + Vite)
+│   ├── src/
+│   │   ├── components/                  # Componentes (Acessibilidade, Header, Unidades, Medicamentos, Agendamento, Login, Admin)
+│   │   ├── servicos/                    # apiCliente.js (Comunicação exclusiva com a API Backend)
+│   │   ├── App.jsx                      # Aplicação Principal e Roteamento SPA
+│   │   ├── index.css                    # Design System, WCAG 2.1 AA, Modo Idoso e Alto Contraste
+│   │   └── main.jsx                     # Ponto de entrada do React
+│   ├── public/                          # Imagens e logomarcas dos estabelecimentos
+│   ├── package.json                     # Dependências do Frontend
+│   └── .env.example                     # Variáveis do Frontend
+│
+├── .gitignore                           # Proteção de segurança (ignora .env, *.log, *.db)
+├── .env.example                         # Exemplo das chaves e portas raiz
+├── package.json                         # Scripts unificados de execução
+└── README.md                            # Guia principal do projeto
 ```
 
 ---
 
-## Instalação e Configuração
+## 🚀 Requisitos de Software Aplicados
+
+| Requisito | Nome | Descrição | Status |
+|-----------|------|-----------|--------|
+| **RF01** | **Busca e Filtragem** | Pesquisa por termo, cidade (Barra do Garças, Pontal do Araguaia, Aragarças), tipo (Hospital, UBS, Clínica, Laboratório), atendimento (SUS, Particular, Convênio) e especialidades. | ✅ Aplicado |
+| **RF02** | **Geolocalização & Mapa** | Captura de coordenadas GPS via HTML5, busca de endereço por CEP (ViaCEP API) e visualização em mapa interativo integrado. | ✅ Aplicado |
+| **RF03** | **Perfil Detalhado da Unidade** | Endereço completo, horários, convênios aceitos, especialidades, fotos reais e notas médias. | ✅ Aplicado |
+| **RF04** | **Avaliações Comunitárias** | Usuários cadastrados avaliam de 1 a 5 estrelas e publicam comentários sobre o atendimento. Média calculada dinamicamente. | ✅ Aplicado |
+| **RF05** | **Atalhos de Contato Direto** | Botões de ação rápida "📞 Ligar Agora" e "💬 WhatsApp" diretamente nos cards das unidades. | ✅ Aplicado |
+| **RF06** | **Alta Acessibilidade (Idosos)** | Barra de acessibilidade com Modo Idoso (fontes e botões ampliados), Alto Contraste e ajuste A+/A- em conformidade com WCAG 2.1 AA. | ✅ Aplicado |
+| **RF07** | **Moderação de Avaliações** | Painel administrativo (`/admin`) para gestores moderarem comentários e aprovarem novos estabelecimentos parceiros (RN01). | ✅ Aplicado |
+| **RSF-MED** | **Consulta de Medicamentos** | Pesquisa de disponibilidade de remédios em tempo real com status de estoque (Disponível, Baixo estoque, Sem estoque) por unidade. | ✅ Aplicado |
+| **RSF-AGD** | **Agendamento Digital** | Formulário de agendamento de consultas com seleção de horários disponíveis e aba de cancelamento em "Meus Agendamentos". | ✅ Aplicado |
+| **RSF-AUTH**| **Autenticação Segura** | Cadastro e Login com hash de senha SHA-256 e emissão de tokens de sessão para os perfis Cidadão, Atendente e Gestor. | ✅ Aplicado |
+
+---
+
+## 🔒 Segurança e Configuração (`.env` & `.gitignore`)
+
+O projeto implementa proteção fail-safe:
+1. **`.gitignore`**: Impede o envio de:
+   - Arquivos de segredos (`.env`, `.env.local`)
+   - Arquivos de log (`*.log`, `logs/`, `server.log`)
+   - Arquivos binários do banco de dados SQLite (`*.db`, `*.sqlite`, `*.db-wal`, `api/db/*.db`)
+   - Pacotes (`node_modules/`) e builds (`dist/`, `.next/`)
+2. **`.env` (Configurações do Servidor)**:
+   - `PORT`: Porta do servidor backend (Padrão: `3000`)
+   - `JWT_SECRET`: Chave secreta de assinatura de tokens de autenticação
+   - `API_KEY_ADMIN` & `API_KEY_PUBLICA`: Chaves de proteção contra requisições não autorizadas
+   - `ORIGEM_PERMITIDA`: Domínios permitidos via CORS (ex: `http://localhost:5173`)
+   - `VITE_API_URL`: Endereço base da API consumido pelo Frontend (`http://localhost:3000/api`)
+
+---
+
+## 📦 Como Executar o Projeto
 
 ### Pré-requisitos
+- **Node.js** (versão 18 ou superior)
 
-- [Node.js](https://nodejs.org/) (v18 ou superior)
-- npm (v9 ou superior)
-
-### 1. Clonar o repositório
-
+### 1. Instalação das dependências
+Na raiz do projeto:
 ```bash
-git clone https://github.com/danieeee3344/localize-sua-saude.git
-cd localize-sua-saude
+npm run setup
+```
+*(Ou instale manualmente entrando em `api` e `frontend`: `cd api && npm install && cd ../frontend && npm install`)*
+
+### 2. Inicialização do Banco de Dados SQLite
+O banco de dados com os dados iniciais do Vale do Araguaia é criado automaticamente ao iniciar o servidor, ou manualmente via:
+```bash
+cd api
+node iniciarBanco.js
 ```
 
-### 2. Instalar dependências
+### 3. Execução em Desenvolvimento
 
+Para rodar o **Backend (API)**:
 ```bash
-npm install
-```
-
-### 3. Configurar variáveis de ambiente
-
-Copie o `.env.example` para `.env` e configure a chave secreta:
-
-```bash
-cp .env.example .env
-```
-
-Edite o `.env`:
-
-```env
-AUTH_SECRET=sua_chave_secreta_aqui_troque_em_producao
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
-
-> **IMPORTANTE:** O arquivo `.env` está no `.gitignore` e nunca deve ser commitado.
-
----
-
-## Execução
-
-### Modo Desenvolvimento
-
-```bash
+cd api
 npm run dev
 ```
+*(API rodando em `http://localhost:3000`)*
 
-Acesse: [http://localhost:3000](http://localhost:3000)
-
-### Modo Produção
-
+Para rodar o **Frontend (Vite)**:
 ```bash
-npm run build
-npm start
+cd frontend
+npm run dev
 ```
+*(Frontend rodando em `http://localhost:5173`)*
 
 ---
 
-## API
+## 👥 Contas de Demonstração Rápidas
 
-### Endpoints Públicos (sem autenticação)
-
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| `POST` | `/api/auth/login` | Autenticar usuário (retorna token) |
-| `POST` | `/api/auth/cadastro` | Cadastrar novo usuário |
-
-### Endpoints Protegidos (requer `Authorization: Bearer <token>`)
-
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| `GET` | `/api/agendamentos` | Listar agendamentos do usuário logado |
-| `POST` | `/api/agendamentos` | Criar novo agendamento |
-| `DELETE` | `/api/agendamentos/:id` | Cancelar agendamento |
-| `POST` | `/api/avaliacoes` | Criar avaliação para una unidade |
-
-### Exemplo: Login
-
-```bash
-curl -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email": "cidadao@teste.com", "senha": "123456"}'
-```
-
-**Resposta:**
-```json
-{
-  "ok": true,
-  "usuario": { "id": 1, "nome": "Maria Silva", "email": "cidadao@teste.com", "perfil": "cidadao" },
-  "token": "eyJhbGciOi..."
-}
-```
-
-### Exemplo: Criar Agendamento (com token)
-
-```bash
-curl -X POST http://localhost:3000/api/agendamentos \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <token>" \
-  -d '{"unidade": "UBS Central", "especialidade": "Clínico Geral", "data": "2025-01-15", "horario": "09:00", "paciente": "Maria Silva"}'
-```
-
----
-
-## Banco de Dados
-
-SQLite via sql.js (WebAssembly), persistido em `data/lss.db`.
-
-### Tabelas
-
-```sql
--- Usuários
-CREATE TABLE usuarios (
-  id        INTEGER PRIMARY KEY AUTOINCREMENT,
-  nome      TEXT    NOT NULL,
-  email     TEXT    NOT NULL UNIQUE COLLATE NOCASE,
-  senha     TEXT    NOT NULL,
-  perfil    TEXT    NOT NULL DEFAULT 'cidadao',
-  criado_em TEXT    DEFAULT (datetime('now'))
-);
-
--- Agendamentos
-CREATE TABLE agendamentos (
-  id            INTEGER PRIMARY KEY AUTOINCREMENT,
-  usuario_id    INTEGER NOT NULL REFERENCES usuarios(id),
-  unidade       TEXT    NOT NULL,
-  especialidade TEXT    NOT NULL,
-  data          TEXT    NOT NULL,
-  horario       TEXT    NOT NULL,
-  paciente      TEXT    NOT NULL,
-  cpf           TEXT,
-  telefone      TEXT,
-  observacoes   TEXT,
-  status        TEXT    NOT NULL DEFAULT 'confirmado',
-  criado_em     TEXT    DEFAULT (datetime('now'))
-);
-
--- Avaliações
-CREATE TABLE avaliacoes (
-  id         INTEGER PRIMARY KEY AUTOINCREMENT,
-  usuario_id INTEGER NOT NULL REFERENCES usuarios(id),
-  unidade_id TEXT    NOT NULL,
-  nota       INTEGER NOT NULL CHECK (nota BETWEEN 1 AND 5),
-  comentario TEXT,
-  criado_em  TEXT    DEFAULT (datetime('now'))
-);
-```
-
-O banco e as tabelas são criados automaticamente ao iniciar o servidor.
-
----
-
-## Segurança
-
-- **Middleware de Autenticação:** Todas as rotas `/api/*` (exceto login/cadastro) requerem token válido
-- **Tokens HMAC-SHA256:** Sessões assinadas com `AUTH_SECRET` do `.env`, expiração de 24h
-- **userId do Token:** O identificador do usuário é extraído do token validado no servidor, não mais confiado do cliente
-- **Cadastro Seguro:** Perfil de usuário é forçado como `cidadao` no servidor
-- **.env Protegido:** Variáveis sensíveis nunca são commitadas (`.gitignore`)
-- **Prepared Statements:** Queries parametrizadas para prevenir SQL Injection
-
----
-
-## Histórico do Projeto
-
-| Fase | Descrição | Tecnologia |
-|------|-----------|-----------|
-| **Fase 1** | Levantamento de requisitos | Documentação (req-system, req-user) |
-| **Fase 2** | Protótipo funcional | HTML/CSS/JS estático + sql.js (WASM) |
-| **Fase 3** | Backend + Frontend separados | React 18 + Node.js/Express + better-sqlite3 |
-| **Fase 4** | Sistema integrado atual | Next.js 14 (App Router) + sql.js + HMAC auth |
-
----
-
-## Contato e Repositório
-
-- **Repositório:** [github.com/danieeee3344/localize-sua-saude](https://github.com/danieeee3344/localize-sua-saude)
-- **Região atendida:** Barra do Garças (MT), Pontal do Araguaia (MT), Aragarças (GO)
-
----
-
-## Licença
-
-Desenvolvido para fins acadêmicos e educacionais.
+Para facilitar testes e apresentação dos requisitos:
+- **Cidadão / Paciente:** `cidadao@teste.com` / Senha: `123456`
+- **Atendente:** `atendente@teste.com` / Senha: `123456`
+- **Gestor / Moderador:** `gestor@teste.com` / Senha: `123456`

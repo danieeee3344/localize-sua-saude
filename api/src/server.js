@@ -12,6 +12,9 @@ function validarSegredos() {
   const erros = []
   const CHAVE_MIN = 32
 
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < CHAVE_MIN) {
+    erros.push('JWT_SECRET ausente ou com menos de 32 caracteres no .env')
+  }
   if (!process.env.API_KEY_PUBLICA || process.env.API_KEY_PUBLICA.length < CHAVE_MIN) {
     erros.push('API_KEY_PUBLICA ausente ou com menos de 32 caracteres no .env')
   }

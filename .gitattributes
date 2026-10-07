@@ -1,0 +1,10 @@
+# Normaliza quebras de linha para LF no repositório (padrão Linux/Mac)
+* text=auto eol=lf
+
+# Arquivos binários — sem conversão
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.svg text eol=lf
